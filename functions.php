@@ -555,3 +555,109 @@ add_action( 'customize_preview_init', 'oc_ca_customize_preview_enqueue' );
     $updater->getVcsApi()->enableReleaseAssets();
 
 } )();
+
+
+// ============================================================
+// 10. SERVICE PAGE META BOX  (Hero section fields)
+// ============================================================
+//
+// Adds a "Service Hero Settings" panel inside the Page editor for any page
+// using the "Service Page" template (page-service.php). Editors fill in:
+//   • Price Tag text       → _service_price
+//   • Hero Subtitle        → _service_subtitle
+//   • Free Bundle Heading  → _service_free_title
+//   • Free Item 1–4        → _service_free_{n}_icon + _service_free_{n}_label
+//
+// The main article content (intro, features, tables, FAQs, etc.) is
+// written directly in the page editor content area via the_content().
+
+function oc_ca_register_service_meta_box() {
+    add_meta_box(
+        'oc_ca_service_hero',
+        __( 'Service Hero Settings', 'oc-ca-theme' ),
+        'oc_ca_service_meta_box_html',
+        'page',
+        'side',
+        'high'
+    );
+}
+add_action( 'add_meta_boxes_page', 'oc_ca_register_service_meta_box' );
+
+function oc_ca_service_meta_box_html( $post ) {
+    wp_nonce_field( 'oc_ca_service_hero_save', 'oc_ca_service_hero_nonce' );
+
+    $price    = get_post_meta( $post->ID, '_service_price',      true );
+    $subtitle = get_post_meta( $post->ID, '_service_subtitle',   true );
+    $free_ttl = get_post_meta( $post->ID, '_service_free_title', true );
+
+    $default_icons  = array( 'fa-address-card', 'fa-file-invoice-dollar', 'fa-user-tie', 'fa-cloud' );
+    $default_labels = array( 'Shop Act', 'Invoice Format', 'Consulting', 'Accounting Software' );
+
+    $style_label = 'display:block;font-weight:600;font-size:11px;text-transform:uppercase;color:#646970;margin-bottom:3px;';
+    $style_input = 'width:100%;margin-bottom:10px;';
+    $style_hint  = 'font-size:11px;color:#8c8f94;margin-bottom:14px;display:block;';
+    ?>
+    <p style="font-size:12px;color:#646970;margin-top:0;">Only active when template is <strong>Service Page</strong>.</p>
+
+    <label style="<?php echo $style_label; ?>">Price Tag</label>
+    <input type="text" name="service_price" value="<?php echo esc_attr( $price ); ?>" style="<?php echo $style_input; ?>" placeholder="@ Rs. 990 All Inclusive">
+
+    <label style="<?php echo $style_label; ?>">Hero Subtitle</label>
+    <input type="text" name="service_subtitle" value="<?php echo esc_attr( $subtitle ); ?>" style="<?php echo $style_input; ?>" placeholder="100% Online Process & CA Services">
+
+    <label style="<?php echo $style_label; ?>">Free Bundle Heading</label>
+    <input type="text" name="service_free_title" value="<?php echo esc_attr( $free_ttl ); ?>" style="<?php echo $style_input; ?>" placeholder="Also Get Absolutely Free">
+
+    <hr style="margin:10px 0;">
+    <p style="font-size:11px;color:#8c8f94;margin:0 0 8px;">Free items — icon class (e.g. <code>fa-star</code>) + label text:</p>
+    <?php for ( $i = 1; $i <= 4; $i++ ) :
+        $icon  = get_post_meta( $post->ID, "_service_free_{$i}_icon",  true ) ?: $default_icons[ $i - 1 ];
+        $label = get_post_meta( $post->ID, "_service_free_{$i}_label", true ) ?: $default_labels[ $i - 1 ];
+    ?>
+    <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;">
+        <span style="font-size:11px;color:#646970;min-width:40px;">Item <?php echo $i; ?></span>
+        <input type="text" name="service_free_<?php echo $i; ?>_icon"  value="<?php echo esc_attr( $icon ); ?>"  style="flex:1;" placeholder="fa-star">
+        <input type="text" name="service_free_<?php echo $i; ?>_label" value="<?php echo esc_attr( $label ); ?>" style="flex:1.5;" placeholder="Label">
+    </div>
+    <?php endfor; ?>
+    <?php
+}
+
+function oc_ca_save_service_meta( $post_id ) {
+    if ( ! isset( $_POST['oc_ca_service_hero_nonce'] ) ) {
+        return;
+    }
+    if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['oc_ca_service_hero_nonce'] ) ), 'oc_ca_service_hero_save' ) ) {
+        return;
+    }
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+
+    $text_fields = array(
+        'service_price'      => '_service_price',
+        'service_subtitle'   => '_service_subtitle',
+        'service_free_title' => '_service_free_title',
+    );
+    foreach ( $text_fields as $post_key => $meta_key ) {
+        if ( isset( $_POST[ $post_key ] ) ) {
+            update_post_meta( $post_id, $meta_key, sanitize_text_field( wp_unslash( $_POST[ $post_key ] ) ) );
+        }
+    }
+
+    for ( $i = 1; $i <= 4; $i++ ) {
+        $icon_key  = "service_free_{$i}_icon";
+        $label_key = "service_free_{$i}_label";
+        if ( isset( $_POST[ $icon_key ] ) ) {
+            // Strip the leading "fa-" if user typed the full class; allow any fa-* class string
+            update_post_meta( $post_id, "_service_free_{$i}_icon",  sanitize_text_field( wp_unslash( $_POST[ $icon_key ] ) ) );
+        }
+        if ( isset( $_POST[ $label_key ] ) ) {
+            update_post_meta( $post_id, "_service_free_{$i}_label", sanitize_text_field( wp_unslash( $_POST[ $label_key ] ) ) );
+        }
+    }
+}
+add_action( 'save_post_page', 'oc_ca_save_service_meta' );

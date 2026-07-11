@@ -2,39 +2,42 @@
 /**
  * Template Name: Service Page
  *
- * Full-featured service landing page: hero with price tag + free bundle + quote form,
- * two-column main layout with page content on the left and a sticky CTA sidebar on the right.
+ * Mirrors the structure of proprietorship-registration.html:
+ *  — Subpage hero: breadcrumb, H1, price tag, subtitle, free bundle grid, quote form
+ *  — Two-column main: the_content() on left + sticky CTA sidebar on right
  *
- * Custom Fields (set via WP editor → Custom Fields panel):
- *   _service_price       — e.g. "@ Rs. 990 All Inclusive"
- *   _service_subtitle    — e.g. "100% Online Process & CA, CS Services At One Place"
- *   _service_free_title  — heading above the free bundle grid
- *   _service_free_items  — JSON: [{"icon":"fa-address-card","label":"Shop Act"},…]
+ * Hero fields are edited from the "Service Hero Settings" panel in the Page editor sidebar.
+ * Main article content (intro, features, tables, FAQs, etc.) is written in the editor body.
  *
  * @package OC_CA_Theme
  */
 
 get_header();
 
-$pid      = get_the_ID();
-$price    = get_post_meta( $pid, '_service_price',      true );
-$subtitle = get_post_meta( $pid, '_service_subtitle',   true );
-$free_ttl = get_post_meta( $pid, '_service_free_title', true ) ?: 'Also Get Absolutely Free';
-$free_raw = get_post_meta( $pid, '_service_free_items', true );
-$free_items = $free_raw ? json_decode( $free_raw, true ) : array(
-    array( 'icon' => 'fa-address-card',       'label' => 'Shop Act' ),
-    array( 'icon' => 'fa-file-invoice-dollar', 'label' => 'Invoice Format' ),
-    array( 'icon' => 'fa-user-tie',           'label' => 'Consulting' ),
-    array( 'icon' => 'fa-cloud',              'label' => 'Accounting Software' ),
-);
-
-$phone     = get_theme_mod( 'footer_phone',     '+91 80555 66789' );
-$wa_num    = get_theme_mod( 'footer_wa_number', '918055566789' );
-$phone_raw = preg_replace( '/\D/', '', $phone );
-$wa_raw    = preg_replace( '/\D/', '', $wa_num );
-
 while ( have_posts() ) :
     the_post();
+
+    $pid = get_the_ID();
+
+    // ── Hero meta fields ──────────────────────────────────────────────
+    $price    = get_post_meta( $pid, '_service_price',      true );
+    $subtitle = get_post_meta( $pid, '_service_subtitle',   true );
+    $free_ttl = get_post_meta( $pid, '_service_free_title', true ) ?: 'Also Get Absolutely Free';
+
+    $free_items = array();
+    $default_icons  = array( 'fa-address-card', 'fa-file-invoice-dollar', 'fa-user-tie', 'fa-cloud' );
+    $default_labels = array( 'Shop Act', 'Invoice Format', 'Consulting', 'Accounting Software' );
+    for ( $i = 1; $i <= 4; $i++ ) {
+        $icon  = get_post_meta( $pid, "_service_free_{$i}_icon",  true ) ?: $default_icons[ $i - 1 ];
+        $label = get_post_meta( $pid, "_service_free_{$i}_label", true ) ?: $default_labels[ $i - 1 ];
+        $free_items[] = array( 'icon' => $icon, 'label' => $label );
+    }
+
+    // ── Contact info (from Customizer, same as footer) ────────────────
+    $phone     = get_theme_mod( 'footer_phone',     '+91 80555 66789' );
+    $wa_num    = get_theme_mod( 'footer_wa_number', '918055566789' );
+    $phone_raw = preg_replace( '/\D/', '', $phone );
+    $wa_raw    = preg_replace( '/\D/', '', $wa_num );
 ?>
 
 <!-- =====================================================
@@ -43,9 +46,10 @@ while ( have_posts() ) :
 <section class="subpage-hero">
     <div class="container hero-subpage-grid">
 
-        <!-- Left: Text + Price + Free Bundle -->
+        <!-- Left: breadcrumb + H1 + price + subtitle + free bundle -->
         <div class="subpage-hero-text">
             <?php oc_ca_breadcrumbs(); ?>
+
             <h1><?php the_title(); ?></h1>
 
             <?php if ( $price ) : ?>
@@ -60,14 +64,13 @@ while ( have_posts() ) :
                 <div class="hero-divider"></div>
             <?php endif; ?>
 
-            <?php if ( ! empty( $free_items ) ) : ?>
             <div class="free-bundle-container">
                 <span class="free-badge">FREE</span>
                 <h3 class="free-title"><?php echo esc_html( $free_ttl ); ?></h3>
                 <div class="free-items-grid">
                     <?php foreach ( $free_items as $item ) :
-                        $icon  = isset( $item['icon'] )  ? sanitize_html_class( $item['icon'] )  : 'fa-star';
-                        $label = isset( $item['label'] ) ? esc_html( $item['label'] ) : '';
+                        $icon  = sanitize_html_class( $item['icon'] );
+                        $label = esc_html( $item['label'] );
                     ?>
                     <div class="free-item">
                         <div class="free-icon"><i class="fa-solid <?php echo esc_attr( $icon ); ?>"></i></div>
@@ -76,10 +79,9 @@ while ( have_posts() ) :
                     <?php endforeach; ?>
                 </div>
             </div>
-            <?php endif; ?>
         </div>
 
-        <!-- Right: Quick Quote Form -->
+        <!-- Right: instant quote form -->
         <div class="subpage-hero-form">
             <div class="form-wrapper">
                 <h3>Get Quote Instantly In A Minute</h3>
@@ -112,18 +114,22 @@ while ( have_posts() ) :
 <main class="subpage-main">
     <div class="container main-grid">
 
-        <!-- LEFT COLUMN: Page Content (Gutenberg blocks / Classic Editor) -->
+        <!-- LEFT: article content from the WordPress page editor -->
         <article class="content-column">
-            <div class="page-content">
-                <?php the_content(); ?>
-            </div>
+            <?php the_content(); ?>
+            <?php
+            wp_link_pages( array(
+                'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'oc-ca-theme' ),
+                'after'  => '</div>',
+            ) );
+            ?>
         </article>
 
-        <!-- RIGHT COLUMN: Sticky Sidebar -->
+        <!-- RIGHT: sticky sidebar -->
         <aside class="sidebar-column">
             <div class="sticky-sidebar-container">
 
-                <!-- CTA Card: Call + WhatsApp -->
+                <!-- CTA: call + WhatsApp -->
                 <div class="sidebar-card cta-side-card">
                     <h4>Get Free Consultation</h4>
                     <p>Speak directly with our senior CA partner to clear your compliance doubts and setup your business.</p>
@@ -135,9 +141,9 @@ while ( have_posts() ) :
                     </a>
                 </div>
 
-                <!-- Why ANBCA Trust Card -->
+                <!-- Why ANBCA trust card -->
                 <div class="sidebar-card why-side-card">
-                    <h4><i class="fa-solid fa-shield-halved" style="color:var(--primary);margin-right:8px;"></i> Why A N Bhutada &amp; Co?</h4>
+                    <h4>Why A N Bhutada &amp; Co?</h4>
                     <ul>
                         <li><i class="fa-solid fa-shield-halved"></i> 100% Confidentiality</li>
                         <li><i class="fa-solid fa-clock"></i> Timely Filing Guarantee</li>
