@@ -56,32 +56,63 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Mobile Dropdowns — click behavior instead of hover (covers both simple dropdown and mega menu)
+    // Mobile Dropdowns — click to expand/collapse (both simple dropdowns and mega menus)
     const dropdownItems = document.querySelectorAll('.nav-item.has-dropdown, .nav-item.is-mega');
 
     dropdownItems.forEach(item => {
-        const link = item.querySelector('.nav-link');
+        const link = item.querySelector(':scope > .nav-link');
         if (link) {
             link.addEventListener('click', (e) => {
                 if (window.innerWidth <= 1024) {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    dropdownItems.forEach(otherItem => {
-                        if (otherItem !== item) {
-                            otherItem.classList.remove('active');
-                        }
+                    const isOpen = item.classList.contains('active');
+
+                    // Close all siblings
+                    dropdownItems.forEach(other => {
+                        if (other !== item) other.classList.remove('active');
                     });
 
-                    item.classList.toggle('active');
-
-                    const chevron = link.querySelector('i');
-                    if (chevron) {
-                        chevron.style.transform = item.classList.contains('active') ? 'rotate(180deg)' : '';
-                    }
+                    // Toggle current
+                    item.classList.toggle('active', !isOpen);
                 }
             });
         }
+    });
+
+    // Desktop mega menu — clamp panel to viewport so it never overflows left/right
+    document.querySelectorAll('.nav-item.is-mega').forEach(item => {
+        const menu = item.querySelector('.mega-menu');
+        if (!menu) return;
+
+        item.addEventListener('mouseenter', () => {
+            if (window.innerWidth <= 1024) return;
+
+            // Reset to centered position first, then measure
+            menu.style.left = '';
+            menu.style.transform = '';
+            menu.style.transform = 'translateX(-50%) translateY(0)';
+
+            const rect   = menu.getBoundingClientRect();
+            const vw     = window.innerWidth;
+            const margin = 16;
+
+            if (rect.right > vw - margin) {
+                // Panel bleeds off the right edge: shift left
+                const shift = rect.right - (vw - margin);
+                menu.style.transform = `translateX(calc(-50% - ${shift}px)) translateY(0)`;
+            } else if (rect.left < margin) {
+                // Panel bleeds off the left edge: shift right
+                const shift = margin - rect.left;
+                menu.style.transform = `translateX(calc(-50% + ${shift}px)) translateY(0)`;
+            }
+        });
+
+        item.addEventListener('mouseleave', () => {
+            menu.style.left      = '';
+            menu.style.transform = '';
+        });
     });
 
     /* ==========================================================================

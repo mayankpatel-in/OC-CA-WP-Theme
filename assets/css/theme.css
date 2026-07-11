@@ -431,51 +431,58 @@ img {
 }
 
 /* ── Mega Menu (3-level) ──────────────────────────────────
-   .nav-item.is-mega is position:static so the absolute
-   mega-menu panel is anchored to .nav-container.          */
+   .nav-item.is-mega is the positioning anchor.
+   The panel auto-sizes to its content (not full-width).
+   JS clamps it to the viewport if it overflows an edge.   */
 
 .nav-item.is-mega {
-    position: static;
+    position: relative; /* anchor for the panel */
 }
 
 .mega-menu {
     position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
     background: var(--white);
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.13);
-    border-radius: 0 0 16px 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
     border-top: 3px solid var(--primary);
-    padding: 28px 32px 32px;
+    padding: 24px 28px 28px;
+    width: max-content;
+    min-width: 300px;
+    max-width: min(900px, calc(100vw - 40px));
     opacity: 0;
     visibility: hidden;
-    transform: translateY(8px);
     transition: opacity 0.22s ease, visibility 0.22s ease, transform 0.22s ease;
     z-index: 1000;
+    pointer-events: none;
 }
 
 .nav-item.is-mega:hover .mega-menu {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
 }
 
-/* Auto columns — adjusts to however many depth-1 items exist */
+/* Flex row of columns — width is driven purely by content */
 .mega-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    display: flex;
     gap: 0;
 }
 
-/* Column */
+/* Column — fixed comfortable width per column */
 .mega-col {
-    padding: 0 28px 0 0;
+    min-width: 180px;
+    max-width: 240px;
+    flex: 1 1 180px;
+    padding: 0 24px 0 0;
 }
 
 .mega-col + .mega-col {
-    padding-left: 28px;
-    padding-right: 28px;
+    padding-left: 24px;
+    padding-right: 24px;
     border-left: 1px solid var(--neutral-bg);
 }
 
@@ -1919,97 +1926,266 @@ img {
 /* Tablets & Small Desktops (1024px and down) */
 @media (max-width: 1024px) {
     .top-bar {
-        display: none; /* Hide top header bar on mobile to save vertical height */
+        display: none;
     }
-    
+
     .mobile-menu-btn {
         display: block;
     }
-    
+
+    /* ── Mobile slide-in panel ─────────────────────────────── */
     .nav-menu {
-        position: absolute;
-        top: 100%;
-        left: -100%;
-        width: 100%;
-        height: calc(100vh - 70px);
-        background-color: var(--white);
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--white);
         flex-direction: column;
         align-items: stretch;
-        padding: 30px 20px;
-        box-shadow: var(--shadow-lg);
-        transition: var(--transition-normal);
+        padding: 0;
         overflow-y: auto;
-        gap: 30px;
+        overflow-x: hidden;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 998;
+        gap: 0;
     }
-    
+
     .nav-menu.active {
-        left: 0;
+        transform: translateX(0);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
     }
-    
+
+    /* ── Top-level nav list ────────────────────────────────── */
     .nav-list {
         flex-direction: column;
         align-items: stretch;
         width: 100%;
-    }
-    
-    .nav-link {
-        justify-content: space-between;
-        padding: 15px 10px;
-        border-bottom: 1.5px solid var(--neutral-bg);
-    }
-    
-    .nav-item.has-dropdown:hover .mega-menu,
-    .nav-item.has-dropdown:hover .dropdown-menu,
-    .nav-item.is-mega:hover .mega-menu {
-        display: none; /* Override hover triggers on mobile — click only */
+        padding: 8px 0;
     }
 
-    .nav-item.has-dropdown.active .mega-menu,
-    .nav-item.has-dropdown.active .dropdown-menu,
-    .nav-item.is-mega.active .mega-menu {
-        display: block;
-        position: static;
-        opacity: 1;
-        visibility: visible;
-        width: 100%;
-        box-shadow: none;
-        padding: 15px 10px;
-        transform: none;
-        border: none;
-        border-radius: 0;
-        border-top: 2px solid var(--primary-light);
-    }
-
-    /* Stack mega columns vertically on mobile */
-    .nav-item.is-mega .mega-grid {
-        grid-template-columns: 1fr;
-        gap: 0;
-    }
-
-    .nav-item.is-mega .mega-col {
-        padding: 0;
-        border-left: none;
+    .nav-item {
         border-bottom: 1px solid var(--neutral-bg);
     }
 
-    .nav-item.is-mega .mega-col:last-child {
+    .nav-item:last-child {
         border-bottom: none;
     }
 
-    .nav-item.is-mega .mega-col-title {
-        padding: 10px 0 8px;
-        margin-bottom: 0;
+    .nav-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 20px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--neutral-darkest);
+        border-radius: 0;
+        border-bottom: none;
+        background: transparent;
     }
 
-    .nav-item.is-mega .mega-col-list {
-        padding-bottom: 6px;
+    .nav-link:hover,
+    .nav-item:hover .nav-link {
+        background: var(--primary-light);
+        color: var(--primary);
     }
-    
+
+    .nav-item.active > .nav-link {
+        color: var(--primary);
+        background: var(--primary-light);
+    }
+
+    /* Chevron animation */
+    .nav-link i.fa-chevron-down {
+        font-size: 0.7rem;
+        color: var(--neutral-medium);
+        transition: transform 0.25s ease;
+        transform: rotate(0deg);
+    }
+
+    .nav-item.active > .nav-link i.fa-chevron-down {
+        transform: rotate(180deg) !important;
+    }
+
+    /* ── Suppress all desktop hover triggers ───────────────── */
+    .nav-item:hover .nav-link i,
+    .nav-item:hover .dropdown-menu,
+    .nav-item.has-dropdown:hover .dropdown-menu,
+    .nav-item.is-mega:hover .mega-menu {
+        /* reset desktop hover states */
+        transform: none;
+        opacity: 0;
+        visibility: hidden;
+        display: none;
+    }
+
+    /* ── Simple dropdown (2-level) ─────────────────────────── */
+    .dropdown-menu {
+        display: none;
+        position: static;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        pointer-events: auto !important;
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        box-shadow: none;
+        border-radius: 0;
+        border: none;
+        border-left: 3px solid var(--primary);
+        margin-left: 20px;
+        padding: 4px 0;
+        background: transparent;
+    }
+
+    .nav-item.has-dropdown.active > .dropdown-menu {
+        display: block;
+    }
+
+    .dropdown-menu ul {
+        padding: 0;
+    }
+
+    .dropdown-menu ul li {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .dropdown-menu ul li:last-child {
+        border-bottom: none;
+    }
+
+    .dropdown-menu ul li a {
+        display: block;
+        padding: 13px 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--neutral-dark);
+        background: transparent;
+        transition: color 0.15s, padding-left 0.15s;
+    }
+
+    .dropdown-menu ul li a:hover {
+        color: var(--primary);
+        padding-left: 26px;
+        background: transparent;
+    }
+
+    /* ── Mega menu (3-level) ───────────────────────────────── */
+    .mega-menu {
+        display: none;
+        position: static !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        pointer-events: auto !important;
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        box-shadow: none;
+        border-radius: 0;
+        border: none;
+        padding: 0;
+        background: transparent;
+    }
+
+    .nav-item.is-mega.active > .mega-menu {
+        display: block;
+    }
+
+    /* Stack columns vertically */
     .mega-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+        flex-direction: column;
+        gap: 0;
     }
-    
+
+    .mega-col {
+        min-width: 0;
+        max-width: none;
+        flex: none;
+        padding: 0;
+        border-left: none;
+        border-top: none;
+    }
+
+    .mega-col + .mega-col {
+        padding-left: 0;
+        padding-right: 0;
+        border-left: none;
+        border-top: 1px solid var(--neutral-bg);
+    }
+
+    .mega-col:last-child {
+        padding-right: 0;
+    }
+
+    /* Column title — styled as section label */
+    .mega-col-title {
+        padding: 12px 20px 10px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 1.1px;
+        color: var(--primary);
+        text-transform: uppercase;
+        border-bottom: none;
+        margin-bottom: 0;
+        background: var(--primary-light);
+    }
+
+    .mega-col-list {
+        padding: 4px 0;
+    }
+
+    .mega-col-list li {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .mega-col-list li:last-child {
+        border-bottom: none;
+    }
+
+    .mega-col-list li a {
+        display: block;
+        padding: 13px 20px 13px 28px;
+        font-size: 0.875rem;
+        color: var(--neutral-dark);
+        font-weight: 500;
+        transition: color 0.15s, padding-left 0.15s;
+    }
+
+    .mega-col-list li a:hover {
+        color: var(--primary);
+        padding-left: 34px;
+    }
+
+    /* Solo (no-children) mega col */
+    .mega-col-solo {
+        border-top: 1px solid var(--neutral-bg);
+        padding: 0;
+    }
+
+    .mega-col-solo .mega-solo-link {
+        display: block;
+        padding: 14px 20px 14px 28px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    /* CTA button in mobile nav */
+    .nav-cta {
+        padding: 20px;
+        border-top: 2px solid var(--neutral-bg);
+        margin-top: auto;
+    }
+
+    .nav-cta .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
     .slider-content-wrapper {
         padding: 25px;
     }

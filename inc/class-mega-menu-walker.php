@@ -43,20 +43,25 @@ class OC_CA_Mega_Menu_Walker extends Walker_Nav_Menu {
     /** Whether the current depth-0 item's children have their own children. */
     private $is_mega = false;
 
+    /** Number of direct children (columns) for the current depth-0 item. */
+    private $col_count = 0;
+
     // ── Layout detection ──────────────────────────────────────
 
     /**
-     * Peek at grandchildren before rendering each depth-0 element
-     * so start_lvl knows which container to open.
+     * Peek at children and grandchildren before rendering each depth-0 element.
+     * Sets $is_mega and $col_count so start_lvl can output the right container
+     * and a data-cols attribute for CSS-driven width.
      */
     public function display_element( $element, &$children_elements, $max_depth, $depth, $args, &$output ) {
         if ( 0 === $depth ) {
-            $this->is_mega = false;
+            $this->is_mega   = false;
+            $this->col_count = 0;
             if ( isset( $children_elements[ $element->ID ] ) ) {
                 foreach ( $children_elements[ $element->ID ] as $child ) {
+                    $this->col_count++;
                     if ( isset( $children_elements[ $child->ID ] ) ) {
                         $this->is_mega = true;
-                        break;
                     }
                 }
             }
@@ -129,7 +134,8 @@ class OC_CA_Mega_Menu_Walker extends Walker_Nav_Menu {
 
         if ( 0 === $depth ) {
             if ( $this->is_mega ) {
-                $output .= "\n{$indent}<div class=\"mega-menu\" role=\"navigation\">\n{$indent}\t<div class=\"mega-grid\">\n";
+                $cols    = (int) $this->col_count;
+                $output .= "\n{$indent}<div class=\"mega-menu\" role=\"navigation\" data-cols=\"{$cols}\">\n{$indent}\t<div class=\"mega-grid\">\n";
             } else {
                 $output .= "\n{$indent}<div class=\"dropdown-menu\">\n{$indent}\t<ul>\n";
             }

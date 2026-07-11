@@ -77,7 +77,7 @@ function oc_ca_theme_scripts() {
         'oc-ca-theme-css',
         get_template_directory_uri() . '/assets/css/theme.css',
         array( 'oc-ca-google-fonts', 'oc-ca-fontawesome' ),
-        '1.0.2'
+        '1.0.3'
     );
 
     // WordPress style.css (required)
@@ -93,7 +93,7 @@ function oc_ca_theme_scripts() {
         'oc-ca-theme-js',
         get_template_directory_uri() . '/assets/js/theme.js',
         array(),
-        '1.0.0',
+        '1.0.3',
         true // load in footer
     );
 
