@@ -39,93 +39,253 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       2. MOBILE MENU & RESPONSIVE DROPDOWNS
+       2. MOBILE MENU — DRILL-DOWN + DESKTOP HOVER CLAMP
        ========================================================================== */
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const navMenu = document.getElementById('navMenu');
+    const navMenu       = document.getElementById('navMenu');
+    const navList       = navMenu ? navMenu.querySelector('.nav-list') : null;
+
+    // ── Hamburger open / close ────────────────────────────────────────────────
+    function closeNav() {
+        if (!navMenu) return;
+        navMenu.classList.remove('active');
+        const icon = mobileMenuBtn && mobileMenuBtn.querySelector('i');
+        if (icon) icon.className = 'fa-solid fa-bars';
+        if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        if (navMenu._resetDrill) navMenu._resetDrill();
+    }
 
     if (mobileMenuBtn && navMenu) {
         mobileMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            navMenu.classList.toggle('active');
-
-            const icon = mobileMenuBtn.querySelector('i');
-            const isOpen = navMenu.classList.contains('active');
-            if (icon) {
-                icon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+            const opening = !navMenu.classList.contains('active');
+            if (opening) {
+                navMenu.classList.add('active');
+                mobileMenuBtn.querySelector('i').className = 'fa-solid fa-xmark';
+                mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            } else {
+                closeNav();
             }
-            mobileMenuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
 
-        // Close menu when clicking outside
         document.addEventListener('click', (e) => {
-            if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                navMenu.classList.remove('active');
-                const icon = mobileMenuBtn.querySelector('i');
-                if (icon) icon.className = 'fa-solid fa-bars';
-                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            if (navMenu.classList.contains('active') &&
+                !navMenu.contains(e.target) &&
+                !mobileMenuBtn.contains(e.target)) {
+                closeNav();
             }
         });
     }
 
-    // Mobile Dropdowns — click to expand/collapse (both simple dropdowns and mega menus)
-    const dropdownItems = document.querySelectorAll('.nav-item.has-dropdown, .nav-item.is-mega');
-
-    dropdownItems.forEach(item => {
-        const link = item.querySelector(':scope > .nav-link');
-        if (link) {
-            link.addEventListener('click', (e) => {
-                if (window.innerWidth <= 1024) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    const isOpen = item.classList.contains('active');
-
-                    // Close all siblings
-                    dropdownItems.forEach(other => {
-                        if (other !== item) other.classList.remove('active');
-                    });
-
-                    // Toggle current
-                    item.classList.toggle('active', !isOpen);
-                }
-            });
-        }
-    });
-
-    // Desktop mega menu — clamp panel to viewport so it never overflows left/right
+    // ── Desktop mega menu — viewport edge clamping ────────────────────────────
     document.querySelectorAll('.nav-item.is-mega').forEach(item => {
         const menu = item.querySelector('.mega-menu');
         if (!menu) return;
-
         item.addEventListener('mouseenter', () => {
             if (window.innerWidth <= 1024) return;
-
-            // Reset to centered position first, then measure
-            menu.style.left = '';
-            menu.style.transform = '';
             menu.style.transform = 'translateX(-50%) translateY(0)';
-
-            const rect   = menu.getBoundingClientRect();
-            const vw     = window.innerWidth;
+            const rect = menu.getBoundingClientRect();
             const margin = 16;
-
-            if (rect.right > vw - margin) {
-                // Panel bleeds off the right edge: shift left
-                const shift = rect.right - (vw - margin);
-                menu.style.transform = `translateX(calc(-50% - ${shift}px)) translateY(0)`;
+            if (rect.right > window.innerWidth - margin) {
+                menu.style.transform = `translateX(calc(-50% - ${rect.right - window.innerWidth + margin}px)) translateY(0)`;
             } else if (rect.left < margin) {
-                // Panel bleeds off the left edge: shift right
-                const shift = margin - rect.left;
-                menu.style.transform = `translateX(calc(-50% + ${shift}px)) translateY(0)`;
+                menu.style.transform = `translateX(calc(-50% + ${margin - rect.left}px)) translateY(0)`;
             }
         });
-
-        item.addEventListener('mouseleave', () => {
-            menu.style.left      = '';
-            menu.style.transform = '';
-        });
+        item.addEventListener('mouseleave', () => { menu.style.transform = ''; });
     });
+
+    // ── Mobile drill-down panel system ────────────────────────────────────────
+    if (navList && navMenu) {
+        // Wrapper holds the sliding track
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mobile-nav-wrapper';
+        const track = document.createElement('div');
+        track.className = 'mobile-nav-track';
+        wrapper.appendChild(track);
+        // Insert before .nav-cta so CTA stays pinned at bottom
+        const cta = navMenu.querySelector('.nav-cta');
+        navMenu.insertBefore(wrapper, cta || null);
+
+        let level = 0;
+        const stack = []; // stack of appended panel elements
+
+        // Extract plain text from a nav-link (ignores icon children)
+        function linkText(el) {
+            return Array.from(el.childNodes)
+                .filter(n => n.nodeType === Node.TEXT_NODE)
+                .map(n => n.textContent.trim())
+                .filter(Boolean)
+                .join('') || el.textContent.trim();
+        }
+
+        function makeLink(href, text) {
+            const a = document.createElement('a');
+            a.href = href || '#';
+            a.className = 'mobile-menu-item';
+            a.textContent = text;
+            return a;
+        }
+
+        function makeSubBtn(text, onClick) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'mobile-menu-item has-sub';
+            const span = document.createElement('span');
+            span.textContent = text;
+            const icon = document.createElement('i');
+            icon.className = 'fa-solid fa-chevron-right';
+            icon.setAttribute('aria-hidden', 'true');
+            btn.appendChild(span);
+            btn.appendChild(icon);
+            btn.addEventListener('click', onClick);
+            return btn;
+        }
+
+        function makeHeader(title, href) {
+            const header = document.createElement('div');
+            header.className = 'mobile-panel-header';
+
+            const back = document.createElement('button');
+            back.type = 'button';
+            back.className = 'mobile-back-btn';
+            back.innerHTML = '<i class="fa-solid fa-chevron-left" aria-hidden="true"></i><span>Back</span>';
+            back.addEventListener('click', popPanel);
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'mobile-panel-title';
+            if (href && href !== '#') {
+                const a = document.createElement('a');
+                a.href = href;
+                a.innerHTML = `${title} <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" style="font-size:0.65em;opacity:0.75"></i>`;
+                titleDiv.appendChild(a);
+            } else {
+                titleDiv.textContent = title;
+            }
+
+            header.appendChild(back);
+            header.appendChild(titleDiv);
+            return header;
+        }
+
+        function pushPanel(panelEl) {
+            track.appendChild(panelEl);
+            panelEl.getBoundingClientRect(); // force reflow before transition
+            level++;
+            track.style.transform = `translateX(${-level * 100}%)`;
+            stack.push(panelEl);
+        }
+
+        function popPanel() {
+            if (level <= 0) return;
+            level--;
+            track.style.transform = `translateX(${-level * 100}%)`;
+            const removed = stack.pop();
+            if (removed) {
+                // Remove after the slide animation ends
+                removed.addEventListener('transitionend', () => removed.remove(), { once: true });
+            }
+        }
+
+        // Build the root panel from top-level .nav-item elements
+        function buildRoot() {
+            const panel = document.createElement('div');
+            panel.className = 'mobile-panel';
+            const ul = document.createElement('ul');
+            ul.className = 'mobile-menu-list';
+
+            navList.querySelectorAll(':scope > .nav-item').forEach(navItem => {
+                const navLink = navItem.querySelector(':scope > .nav-link');
+                if (!navLink) return;
+                const label = linkText(navLink);
+                const href  = navLink.getAttribute('href') || '#';
+                const li    = document.createElement('li');
+
+                if (navItem.classList.contains('is-mega') || navItem.classList.contains('has-dropdown')) {
+                    li.appendChild(makeSubBtn(label, () => pushPanel(buildSub(navItem, label, href))));
+                } else {
+                    li.appendChild(makeLink(href, label));
+                }
+                ul.appendChild(li);
+            });
+
+            panel.appendChild(ul);
+            return panel;
+        }
+
+        // Build a sub-panel for a mega-menu or dropdown nav item
+        function buildSub(navItem, title, href) {
+            const panel = document.createElement('div');
+            panel.className = 'mobile-panel';
+            panel.appendChild(makeHeader(title, href));
+            const ul = document.createElement('ul');
+            ul.className = 'mobile-menu-list';
+
+            if (navItem.classList.contains('is-mega')) {
+                // Each mega-col → either a drill-down row or a direct link
+                navItem.querySelectorAll('.mega-col').forEach(col => {
+                    const li = document.createElement('li');
+                    if (col.classList.contains('mega-col-solo')) {
+                        const a = col.querySelector('a.mega-solo-link');
+                        if (a) li.appendChild(makeLink(a.getAttribute('href'), a.textContent.trim()));
+                    } else {
+                        const titleEl = col.querySelector('.mega-col-title');
+                        const list    = col.querySelector('.mega-col-list');
+                        const colName = titleEl ? titleEl.textContent.trim() : '';
+                        if (list && list.querySelector('li a')) {
+                            li.appendChild(makeSubBtn(colName, () => pushPanel(buildLeaves(list, colName))));
+                        }
+                    }
+                    if (li.firstChild) ul.appendChild(li);
+                });
+            } else {
+                // Simple dropdown — flat list of links
+                navItem.querySelectorAll('.dropdown-menu ul > li > a').forEach(a => {
+                    const li = document.createElement('li');
+                    li.appendChild(makeLink(a.getAttribute('href'), a.textContent.trim()));
+                    ul.appendChild(li);
+                });
+            }
+
+            panel.appendChild(ul);
+            return panel;
+        }
+
+        // Build a leaf panel from a mega-col-list
+        function buildLeaves(megaColList, title) {
+            const panel = document.createElement('div');
+            panel.className = 'mobile-panel';
+            panel.appendChild(makeHeader(title, null));
+            const ul = document.createElement('ul');
+            ul.className = 'mobile-menu-list';
+            megaColList.querySelectorAll('li > a').forEach(a => {
+                const li = document.createElement('li');
+                li.appendChild(makeLink(a.getAttribute('href'), a.textContent.trim()));
+                ul.appendChild(li);
+            });
+            panel.appendChild(ul);
+            return panel;
+        }
+
+        // Reset to root (called when the menu is closed)
+        function resetDrill() {
+            while (stack.length > 1) {
+                const p = stack.pop();
+                if (p) p.remove();
+            }
+            level = 0;
+            track.style.transition = 'none';
+            track.style.transform  = 'translateX(0)';
+            // Re-enable transition after reset
+            requestAnimationFrame(() => { track.style.transition = ''; });
+        }
+
+        // Initialise: append root panel and expose reset
+        const rootPanel = buildRoot();
+        track.appendChild(rootPanel);
+        stack.push(rootPanel);
+        navMenu._resetDrill = resetDrill;
+    }
 
     /* ==========================================================================
        3. INCREMENT STATS COUNTER ANIMATION

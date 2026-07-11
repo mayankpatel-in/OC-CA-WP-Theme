@@ -1933,12 +1933,10 @@ img {
         display: block;
     }
 
-    /* ── Mobile slide-in panel ─────────────────────────────── */
+    /* ── Mobile off-canvas shell ───────────────────────────── */
     .nav-menu {
         position: fixed;
-        /* --header-h is set by JS from the real rendered header height,
-           so the panel always sits flush against the header bottom.     */
-        top: var(--header-h, 66px);
+        top: var(--header-h, 66px); /* JS sets this from real header height */
         left: 0;
         right: 0;
         bottom: 0;
@@ -1946,242 +1944,183 @@ img {
         flex-direction: column;
         align-items: stretch;
         padding: 0;
-        overflow-y: auto;
-        overflow-x: hidden;
+        overflow: hidden; /* panels scroll individually */
         transform: translateX(-100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 99; /* below header (z-index: 100) so header stays on top */
+        transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 99; /* below header z-index: 100 */
         gap: 0;
     }
 
     .nav-menu.active {
         transform: translateX(0);
         border-top: 1px solid var(--neutral-bg);
-        box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-    /* ── Top-level nav list ────────────────────────────────── */
+    /* Hide the desktop nav-list — replaced by JS drill-down panels */
     .nav-list {
-        flex-direction: column;
-        align-items: stretch;
-        width: 100%;
-        padding: 8px 0;
+        display: none !important;
     }
 
-    .nav-item {
+    /* Suppress ALL desktop hover states on mobile */
+    .nav-item:hover .dropdown-menu,
+    .nav-item.has-dropdown:hover .dropdown-menu,
+    .nav-item.is-mega:hover .mega-menu,
+    .dropdown-menu,
+    .mega-menu {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+
+    /* ── Drill-down wrapper (JS-injected) ──────────────────── */
+    .mobile-nav-wrapper {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .mobile-nav-track {
+        display: flex;
+        flex: 1;
+        min-height: 0;
+        transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+    }
+
+    /* Each drill-down panel */
+    .mobile-panel {
+        min-width: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Panel header: back button + title */
+    .mobile-panel-header {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        padding: 0;
+        background: var(--primary);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        flex-shrink: 0;
+    }
+
+    .mobile-back-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 18px;
+        background: rgba(0, 0, 0, 0.15);
+        border: none;
+        border-right: 1px solid rgba(255, 255, 255, 0.15);
+        color: var(--white);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.15s;
+        flex-shrink: 0;
+    }
+
+    .mobile-back-btn:active {
+        background: rgba(0, 0, 0, 0.25);
+    }
+
+    .mobile-back-btn i {
+        font-size: 0.8rem;
+    }
+
+    .mobile-panel-title {
+        flex: 1;
+        text-align: center;
+        padding: 16px 16px 16px 0;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--white);
+        letter-spacing: 0.3px;
+    }
+
+    .mobile-panel-title a {
+        color: var(--white);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Menu items list */
+    .mobile-menu-list {
+        list-style: none;
+        margin: 0;
+        padding: 6px 0;
+        flex: 1;
+    }
+
+    .mobile-menu-list li {
         border-bottom: 1px solid var(--neutral-bg);
     }
 
-    .nav-item:last-child {
+    .mobile-menu-list li:last-child {
         border-bottom: none;
     }
 
-    .nav-link {
+    /* Shared base for both <a> links and <button> sub-triggers */
+    .mobile-menu-item {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        padding: 16px 20px;
-        font-size: 0.95rem;
-        font-weight: 600;
+        justify-content: space-between;
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 0.925rem;
+        font-weight: 500;
         color: var(--neutral-darkest);
-        border-radius: 0;
-        border-bottom: none;
-        background: transparent;
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        text-decoration: none;
+        line-height: 1.4;
+        transition: background 0.12s ease, color 0.12s ease;
+        -webkit-tap-highlight-color: transparent;
     }
 
-    .nav-link:hover,
-    .nav-item:hover .nav-link {
+    .mobile-menu-item:active {
         background: var(--primary-light);
         color: var(--primary);
     }
 
-    .nav-item.active > .nav-link {
-        color: var(--primary);
-        background: var(--primary-light);
+    /* "Has submenu" row — shows a right-chevron */
+    .mobile-menu-item.has-sub {
+        font-weight: 600;
     }
 
-    /* Chevron animation */
-    .nav-link i.fa-chevron-down {
+    .mobile-menu-item.has-sub i.fa-chevron-right {
         font-size: 0.7rem;
         color: var(--neutral-medium);
-        transition: transform 0.25s ease;
-        transform: rotate(0deg);
+        flex-shrink: 0;
+        margin-left: 8px;
+        transition: transform 0.15s ease, color 0.12s ease;
     }
 
-    .nav-item.active > .nav-link i.fa-chevron-down {
-        transform: rotate(180deg) !important;
-    }
-
-    /* ── Suppress all desktop hover triggers ───────────────── */
-    .nav-item:hover .nav-link i,
-    .nav-item:hover .dropdown-menu,
-    .nav-item.has-dropdown:hover .dropdown-menu,
-    .nav-item.is-mega:hover .mega-menu {
-        /* reset desktop hover states */
-        transform: none;
-        opacity: 0;
-        visibility: hidden;
-        display: none;
-    }
-
-    /* ── Simple dropdown (2-level) ─────────────────────────── */
-    .dropdown-menu {
-        display: none;
-        position: static;
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: none !important;
-        pointer-events: auto !important;
-        width: 100%;
-        min-width: 0;
-        max-width: none;
-        box-shadow: none;
-        border-radius: 0;
-        border: none;
-        border-left: 3px solid var(--primary);
-        margin-left: 20px;
-        padding: 4px 0;
-        background: transparent;
-    }
-
-    .nav-item.has-dropdown.active > .dropdown-menu {
-        display: block;
-    }
-
-    .dropdown-menu ul {
-        padding: 0;
-    }
-
-    .dropdown-menu ul li {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    }
-
-    .dropdown-menu ul li:last-child {
-        border-bottom: none;
-    }
-
-    .dropdown-menu ul li a {
-        display: block;
-        padding: 13px 20px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--neutral-dark);
-        background: transparent;
-        transition: color 0.15s, padding-left 0.15s;
-    }
-
-    .dropdown-menu ul li a:hover {
-        color: var(--primary);
-        padding-left: 26px;
-        background: transparent;
-    }
-
-    /* ── Mega menu (3-level) ───────────────────────────────── */
-    .mega-menu {
-        display: none;
-        position: static !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: none !important;
-        pointer-events: auto !important;
-        width: 100%;
-        min-width: 0;
-        max-width: none;
-        box-shadow: none;
-        border-radius: 0;
-        border: none;
-        padding: 0;
-        background: transparent;
-    }
-
-    .nav-item.is-mega.active > .mega-menu {
-        display: block;
-    }
-
-    /* Stack columns vertically */
-    .mega-grid {
-        flex-direction: column;
-        gap: 0;
-    }
-
-    .mega-col {
-        min-width: 0;
-        max-width: none;
-        flex: none;
-        padding: 0;
-        border-left: none;
-        border-top: none;
-    }
-
-    .mega-col + .mega-col {
-        padding-left: 0;
-        padding-right: 0;
-        border-left: none;
-        border-top: 1px solid var(--neutral-bg);
-    }
-
-    .mega-col:last-child {
-        padding-right: 0;
-    }
-
-    /* Column title — styled as section label */
-    .mega-col-title {
-        padding: 12px 20px 10px;
-        font-size: 0.68rem;
-        font-weight: 700;
-        letter-spacing: 1.1px;
-        color: var(--primary);
-        text-transform: uppercase;
-        border-bottom: none;
-        margin-bottom: 0;
-        background: var(--primary-light);
-    }
-
-    .mega-col-list {
-        padding: 4px 0;
-    }
-
-    .mega-col-list li {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    }
-
-    .mega-col-list li:last-child {
-        border-bottom: none;
-    }
-
-    .mega-col-list li a {
-        display: block;
-        padding: 13px 20px 13px 28px;
-        font-size: 0.875rem;
-        color: var(--neutral-dark);
-        font-weight: 500;
-        transition: color 0.15s, padding-left 0.15s;
-    }
-
-    .mega-col-list li a:hover {
-        color: var(--primary);
-        padding-left: 34px;
-    }
-
-    /* Solo (no-children) mega col */
-    .mega-col-solo {
-        border-top: 1px solid var(--neutral-bg);
-        padding: 0;
-    }
-
-    .mega-col-solo .mega-solo-link {
-        display: block;
-        padding: 14px 20px 14px 28px;
-        font-size: 0.875rem;
-        font-weight: 600;
+    .mobile-menu-item.has-sub:active i.fa-chevron-right {
+        transform: translateX(3px);
         color: var(--primary);
     }
 
-    /* CTA button in mobile nav */
+    /* CTA button — pinned at bottom of off-canvas */
     .nav-cta {
-        padding: 20px;
-        border-top: 2px solid var(--neutral-bg);
-        margin-top: auto;
+        padding: 16px 20px;
+        border-top: 1px solid var(--neutral-bg);
+        background: var(--white);
+        flex-shrink: 0;
     }
 
     .nav-cta .btn {
