@@ -24,7 +24,7 @@ $footer_li      = get_theme_mod( 'footer_li_url', '#' );
 $footer_wa      = get_theme_mod( 'footer_wa_number', '918055566789' );
 
 // Customizer values — Footer Bar
-$footer_credit  = get_theme_mod( 'footer_credit_text', 'Designed with ❤️ in India' );
+$footer_credit  = get_theme_mod( 'footer_credit_text', 'Designed with <i class="fa-solid fa-heart" style="color:#e25555;"></i> in India' );
 ?>
 
 <!-- =====================================================
@@ -183,19 +183,19 @@ $footer_credit  = get_theme_mod( 'footer_credit_text', 'Designed with ❤️ in 
         </div>
 
     </div>
-</footer>
 
-<!-- =====================================================
-     FOOTER BAR
-     ===================================================== -->
-<div class="footer-bottom">
-    <div class="container footer-bottom-content">
-        <p>&copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. All Rights Reserved.</p>
-        <?php if ( $footer_credit ) : ?>
-            <p><?php echo esc_html( $footer_credit ); ?></p>
-        <?php endif; ?>
+    <!-- =====================================================
+         FOOTER BAR — inside <footer> to inherit dark background
+         ===================================================== -->
+    <div class="footer-bottom">
+        <div class="container footer-bottom-content">
+            <p>&copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. All Rights Reserved.</p>
+            <?php if ( $footer_credit ) : ?>
+                <p><?php echo wp_kses( $footer_credit, array( 'i' => array( 'class' => array(), 'style' => array() ) ) ); ?></p>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
+</footer>
 
 <?php
 // Floating Contact Buttons

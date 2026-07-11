@@ -1923,6 +1923,9 @@ img {
     }
 }
 
+/* JS injects .mobile-nav-wrapper into #navMenu — hide it on desktop */
+.mobile-nav-wrapper { display: none !important; }
+
 /* Tablets & Small Desktops (1024px and down) */
 @media (max-width: 1024px) {
     .top-bar {
