@@ -237,6 +237,9 @@ if ( ! isset( $content_width ) ) {
  * switcher can show/hide this control when the user clicks the
  * Desktop / Mobile preview buttons in the Customizer toolbar.
  */
+// WP_Customize_Control is only loaded in Customizer context; guard before extending it.
+if ( class_exists( 'WP_Customize_Control' ) ) :
+
 class OC_CA_Range_Control extends WP_Customize_Control {
     public $type   = 'oc-ca-range';
     public $device = ''; // 'desktop' | 'mobile'
@@ -278,6 +281,8 @@ class OC_CA_Range_Control extends WP_Customize_Control {
         <?php
     }
 }
+
+endif; // class_exists( 'WP_Customize_Control' )
 
 
 function oc_ca_customize_register( $wp_customize ) {

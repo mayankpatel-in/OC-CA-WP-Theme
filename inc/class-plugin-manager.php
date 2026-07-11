@@ -224,35 +224,37 @@ class OC_CA_Plugin_Manager {
                 <?php foreach ( self::$plugins as $plugin ) :
                     $status = self::status( $plugin['file'] );
 
-                    // Status badge
-                    $badge = match ( $status ) {
-                        'active'   => '<span class="oc-pm-status-active">&#10003; ' . esc_html__( 'Active', 'oc-ca-theme' ) . '</span>',
-                        'inactive' => '<span class="oc-pm-status-inactive">&#9888; ' . esc_html__( 'Installed, inactive', 'oc-ca-theme' ) . '</span>',
-                        default    => '<span class="oc-pm-status-missing">&#10007; ' . esc_html__( 'Not installed', 'oc-ca-theme' ) . '</span>',
-                    };
+                    // Status badge — plain if/else so PHP 7.4 is supported (match = PHP 8.0+)
+                    if ( $status === 'active' ) {
+                        $badge = '<span class="oc-pm-status-active">&#10003; ' . esc_html__( 'Active', 'oc-ca-theme' ) . '</span>';
+                    } elseif ( $status === 'inactive' ) {
+                        $badge = '<span class="oc-pm-status-inactive">&#9888; ' . esc_html__( 'Installed, inactive', 'oc-ca-theme' ) . '</span>';
+                    } else {
+                        $badge = '<span class="oc-pm-status-missing">&#10007; ' . esc_html__( 'Not installed', 'oc-ca-theme' ) . '</span>';
+                    }
 
                     // Action button
-                    $action = match ( $status ) {
-                        'active' => '&mdash;',
-
-                        'inactive' => sprintf(
+                    if ( $status === 'active' ) {
+                        $action = '&mdash;';
+                    } elseif ( $status === 'inactive' ) {
+                        $action = sprintf(
                             '<a href="%s" class="button button-secondary button-small">%s</a>',
                             esc_url( wp_nonce_url(
                                 admin_url( 'plugins.php?action=activate&plugin=' . rawurlencode( $plugin['file'] ) ),
                                 'activate-plugin_' . $plugin['file']
                             ) ),
                             esc_html__( 'Activate', 'oc-ca-theme' )
-                        ),
-
-                        default => sprintf(
+                        );
+                    } else {
+                        $action = sprintf(
                             '<a href="%s" class="button button-primary button-small">%s</a>',
                             esc_url( wp_nonce_url(
                                 admin_url( 'update.php?action=install-plugin&plugin=' . rawurlencode( $plugin['slug'] ) ),
                                 'install-plugin_' . $plugin['slug']
                             ) ),
                             esc_html__( 'Install', 'oc-ca-theme' )
-                        ),
-                    };
+                        );
+                    }
 
                     $type_html = ! empty( $plugin['required'] )
                         ? '<span class="oc-pm-badge-required">' . esc_html__( 'Required', 'oc-ca-theme' ) . '</span>'
