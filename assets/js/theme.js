@@ -16,6 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================================================== */
     const mainHeader = document.getElementById('mainHeader');
 
+    // Track real header height as --header-h CSS var so the mobile off-canvas
+    // panel sits flush against the header bottom with zero gap.
+    function syncHeaderHeight() {
+        if (mainHeader) {
+            const h = Math.round(mainHeader.getBoundingClientRect().height);
+            document.documentElement.style.setProperty('--header-h', h + 'px');
+        }
+    }
+    syncHeaderHeight();
+    window.addEventListener('resize', syncHeaderHeight, { passive: true });
+
     if (mainHeader) {
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -23,7 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 mainHeader.classList.remove('scrolled');
             }
-        });
+            syncHeaderHeight(); // padding changes when scrolled, remeasure
+        }, { passive: true });
     }
 
     /* ==========================================================================
