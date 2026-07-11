@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Mobile Dropdowns — click behavior instead of hover
-    const dropdownItems = document.querySelectorAll('.nav-item.has-dropdown');
+    // Mobile Dropdowns — click behavior instead of hover (covers both simple dropdown and mega menu)
+    const dropdownItems = document.querySelectorAll('.nav-item.has-dropdown, .nav-item.is-mega');
 
     dropdownItems.forEach(item => {
         const link = item.querySelector('.nav-link');
