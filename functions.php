@@ -287,36 +287,74 @@ endif; // class_exists( 'WP_Customize_Control' )
 
 function oc_ca_customize_register( $wp_customize ) {
 
-    $wp_customize->add_section( 'oc_ca_logo_sizes', array(
-        'title'       => __( 'Logo Sizes', 'oc-ca-theme' ),
-        'description' => __( 'Switch between Desktop and Mobile preview tabs below to see each set of controls.', 'oc-ca-theme' ),
-        'priority'    => 30,
-    ) );
-
-    $logo_controls = array(
+    // ── Header logo heights → Site Identity (title_tagline) ──
+    // Placed next to the logo upload so everything is in one place.
+    $header_logo_controls = array(
         'header_logo_height_desktop' => array(
-            'label'   => __( 'Header Logo Height', 'oc-ca-theme' ),
+            'label'   => __( 'Header Logo Height — Desktop', 'oc-ca-theme' ),
             'default' => 42,
             'device'  => 'desktop',
         ),
         'header_logo_height_mobile' => array(
-            'label'   => __( 'Header Logo Height', 'oc-ca-theme' ),
-            'default' => 32,
-            'device'  => 'mobile',
-        ),
-        'footer_logo_height_desktop' => array(
-            'label'   => __( 'Footer Logo Height', 'oc-ca-theme' ),
-            'default' => 42,
-            'device'  => 'desktop',
-        ),
-        'footer_logo_height_mobile' => array(
-            'label'   => __( 'Footer Logo Height', 'oc-ca-theme' ),
+            'label'   => __( 'Header Logo Height — Mobile', 'oc-ca-theme' ),
             'default' => 32,
             'device'  => 'mobile',
         ),
     );
 
-    foreach ( $logo_controls as $id => $args ) {
+    foreach ( $header_logo_controls as $id => $args ) {
+        $wp_customize->add_setting( $id, array(
+            'default'           => $args['default'],
+            'sanitize_callback' => 'absint',
+            'transport'         => 'postMessage',
+        ) );
+        $wp_customize->add_control(
+            new OC_CA_Range_Control( $wp_customize, $id, array(
+                'label'       => $args['label'],
+                'section'     => 'title_tagline', // built-in Site Identity section
+                'device'      => $args['device'],
+                'input_attrs' => array( 'min' => 20, 'max' => 200, 'step' => 1 ),
+            ) )
+        );
+    }
+
+    // ── Footer Logo section ────────────────────────────────────
+    $wp_customize->add_section( 'oc_ca_logo_sizes', array(
+        'title'       => __( 'Footer Logo', 'oc-ca-theme' ),
+        'description' => __( 'Upload a separate logo for the footer and set its height. Switch Desktop / Mobile tabs to control each size.', 'oc-ca-theme' ),
+        'priority'    => 31,
+    ) );
+
+    // Footer logo image upload (separate from the header / site-identity logo)
+    $wp_customize->add_setting( 'footer_logo', array(
+        'default'           => 0,
+        'sanitize_callback' => 'absint',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control(
+        new WP_Customize_Media_Control( $wp_customize, 'footer_logo', array(
+            'label'     => __( 'Footer Logo Image', 'oc-ca-theme' ),
+            'section'   => 'oc_ca_logo_sizes',
+            'mime_type' => 'image',
+            'priority'  => 1,
+        ) )
+    );
+
+    // Footer logo heights
+    $footer_logo_controls = array(
+        'footer_logo_height_desktop' => array(
+            'label'   => __( 'Footer Logo Height — Desktop', 'oc-ca-theme' ),
+            'default' => 42,
+            'device'  => 'desktop',
+        ),
+        'footer_logo_height_mobile' => array(
+            'label'   => __( 'Footer Logo Height — Mobile', 'oc-ca-theme' ),
+            'default' => 32,
+            'device'  => 'mobile',
+        ),
+    );
+
+    foreach ( $footer_logo_controls as $id => $args ) {
         $wp_customize->add_setting( $id, array(
             'default'           => $args['default'],
             'sanitize_callback' => 'absint',

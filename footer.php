@@ -36,9 +36,21 @@ $footer_credit  = get_theme_mod( 'footer_credit_text', 'Designed with ❤️ in 
         <!-- Footer Col 1: Company Info (Customizer) -->
         <div class="footer-col col-info">
             <?php
-            if ( has_custom_logo() ) {
+            $footer_logo_id = absint( get_theme_mod( 'footer_logo', 0 ) );
+
+            if ( $footer_logo_id ) {
+                // Dedicated footer logo uploaded via Customize → Footer Logo
+                $logo_url = wp_get_attachment_image_url( $footer_logo_id, 'full' );
+                $logo_alt = get_post_meta( $footer_logo_id, '_wp_attachment_image_alt', true );
+                if ( ! $logo_alt ) {
+                    $logo_alt = get_bloginfo( 'name' );
+                }
+                echo '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( $logo_alt ) . '" class="footer-logo">';
+            } elseif ( has_custom_logo() ) {
+                // Fall back to the Site Identity logo
                 the_custom_logo();
             } else {
+                // Last resort: theme default image
                 echo '<img src="' . esc_url( get_template_directory_uri() ) . '/assets/img/logo-light.png" alt="' . esc_attr( get_bloginfo( 'name' ) ) . '" class="footer-logo" onerror="this.style.display=\'none\'">';
             }
             ?>
