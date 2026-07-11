@@ -77,7 +77,7 @@ function oc_ca_theme_scripts() {
         'oc-ca-theme-css',
         get_template_directory_uri() . '/assets/css/theme.css',
         array( 'oc-ca-google-fonts', 'oc-ca-fontawesome' ),
-        '1.0.0'
+        '1.0.2'
     );
 
     // WordPress style.css (required)
@@ -452,28 +452,15 @@ function oc_ca_customize_register( $wp_customize ) {
 add_action( 'customize_register', 'oc_ca_customize_register' );
 
 
-// Front-end: inject saved logo sizes as inline CSS (used on every page load).
+// Front-end: publish saved logo sizes as CSS custom properties.
+// theme.css uses var(--logo-h-*) so there are no selector-specificity conflicts.
 function oc_ca_logo_size_css() {
     $hd = absint( get_theme_mod( 'header_logo_height_desktop', 42 ) );
     $hm = absint( get_theme_mod( 'header_logo_height_mobile',  32 ) );
     $fd = absint( get_theme_mod( 'footer_logo_height_desktop', 42 ) );
     $fm = absint( get_theme_mod( 'footer_logo_height_mobile',  32 ) );
 
-    $css = "
-        .main-header .logo img,
-        .main-header .logo .custom-logo { height: {$hd}px; width: auto; }
-
-        .main-footer .col-info .custom-logo-link img,
-        .main-footer .footer-logo { height: {$fd}px; width: auto; }
-
-        @media ( max-width: 768px ) {
-            .main-header .logo img,
-            .main-header .logo .custom-logo { height: {$hm}px; width: auto; }
-
-            .main-footer .col-info .custom-logo-link img,
-            .main-footer .footer-logo { height: {$fm}px; width: auto; }
-        }
-    ";
+    $css = ":root{--logo-h-desktop:{$hd}px;--logo-h-mobile:{$hm}px;--footer-logo-h-desktop:{$fd}px;--footer-logo-h-mobile:{$fm}px;}";
 
     wp_add_inline_style( 'oc-ca-theme-css', $css );
 }
@@ -486,7 +473,7 @@ function oc_ca_customize_controls_enqueue() {
         'oc-ca-customize-controls',
         get_template_directory_uri() . '/assets/js/customize-controls.js',
         array( 'jquery', 'customize-controls' ),
-        '1.0.1',
+        '1.0.2',
         true
     );
 
@@ -524,7 +511,7 @@ function oc_ca_customize_preview_enqueue() {
         'oc-ca-customize-preview',
         get_template_directory_uri() . '/assets/js/customize-preview.js',
         array( 'customize-preview' ),
-        '1.0.1',
+        '1.0.2',
         true
     );
 }

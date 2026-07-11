@@ -41,22 +41,22 @@
 <header class="main-header" id="mainHeader">
     <div class="container nav-container">
 
-        <!-- Logo -->
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="logo" id="logoLink" rel="home">
-            <?php
-            if ( has_custom_logo() ) {
-                the_custom_logo();
-            } else {
-                ?>
-                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-light.png" alt="<?php bloginfo( 'name' ); ?>" class="logo-light" onerror="this.style.display='none'">
-                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-dark.png" alt="<?php bloginfo( 'name' ); ?>" class="logo-dark" onerror="this.style.display='none'">
-                <span class="logo-text" style="font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; color: var(--primary);">
-                    <?php bloginfo( 'name' ); ?>
-                </span>
-                <?php
-            }
-            ?>
-        </a>
+        <!-- Logo
+             Use <div> as wrapper so the_custom_logo() (which already outputs its own <a>)
+             does not create invalid nested anchors that break CSS descendant selectors. -->
+        <div class="logo" id="logoLink">
+            <?php if ( has_custom_logo() ) : ?>
+                <?php the_custom_logo(); ?>
+            <?php else : ?>
+                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+                    <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/img/logo-light.png" alt="<?php bloginfo( 'name' ); ?>" class="logo-light" onerror="this.style.display='none'">
+                    <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/img/logo-dark.png" alt="<?php bloginfo( 'name' ); ?>" class="logo-dark" onerror="this.style.display='none'">
+                    <span class="logo-text" style="font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; color: var(--primary);">
+                        <?php bloginfo( 'name' ); ?>
+                    </span>
+                </a>
+            <?php endif; ?>
+        </div>
 
         <!-- Mobile Menu Toggle -->
         <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation" aria-expanded="false">

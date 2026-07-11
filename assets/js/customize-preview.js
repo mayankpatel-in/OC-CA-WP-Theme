@@ -1,15 +1,18 @@
 /**
  * OC CA Theme — Customizer Preview
  *
- * Listens for postMessage value changes from the Customizer panel
- * and injects a live <style> tag into the preview iframe so logo
- * size updates are instant — no page reload needed.
+ * Listens for postMessage value changes and updates :root CSS custom
+ * properties so the logo height reflects instantly in the preview iframe.
+ *
+ * Uses CSS vars (--logo-h-desktop etc.) instead of selector-based CSS so
+ * there are no specificity conflicts with theme.css rules.
  */
 ( function () {
     'use strict';
 
     var STYLE_ID = 'oc-ca-logo-size-live';
 
+    // Keyed by Customizer setting ID → current value
     var settings = {
         header_logo_height_desktop: 42,
         header_logo_height_mobile:  32,
@@ -17,27 +20,13 @@
         footer_logo_height_mobile:  32,
     };
 
-    function buildCSS() {
-        var hd = settings.header_logo_height_desktop;
-        var hm = settings.header_logo_height_mobile;
-        var fd = settings.footer_logo_height_desktop;
-        var fm = settings.footer_logo_height_mobile;
-
-        return (
-            '.main-header .logo img,' +
-            '.main-header .logo .custom-logo{height:' + hd + 'px;width:auto;}' +
-
-            '.main-footer .col-info .custom-logo-link img,' +
-            '.main-footer .footer-logo{height:' + fd + 'px;width:auto;}' +
-
-            '@media(max-width:768px){' +
-                '.main-header .logo img,' +
-                '.main-header .logo .custom-logo{height:' + hm + 'px;width:auto;}' +
-                '.main-footer .col-info .custom-logo-link img,' +
-                '.main-footer .footer-logo{height:' + fm + 'px;width:auto;}' +
-            '}'
-        );
-    }
+    // Map setting ID → CSS custom property name
+    var varMap = {
+        header_logo_height_desktop: '--logo-h-desktop',
+        header_logo_height_mobile:  '--logo-h-mobile',
+        footer_logo_height_desktop: '--footer-logo-h-desktop',
+        footer_logo_height_mobile:  '--footer-logo-h-mobile',
+    };
 
     function injectStyle() {
         var el = document.getElementById( STYLE_ID );
@@ -46,13 +35,31 @@
             el.id = STYLE_ID;
             document.head.appendChild( el );
         }
-        el.textContent = buildCSS();
+
+        var css = ':root{';
+        Object.keys( varMap ).forEach( function ( id ) {
+            css += varMap[ id ] + ':' + settings[ id ] + 'px;';
+        } );
+        css += '}';
+
+        el.textContent = css;
     }
 
     Object.keys( settings ).forEach( function ( id ) {
         wp.customize( id, function ( value ) {
+            // Seed with the current saved value so all vars are correct from
+            // the moment the Customizer opens — not just after a change.
+            var current = parseInt( value.get(), 10 );
+            if ( current > 0 ) {
+                settings[ id ] = current;
+            }
+            injectStyle();
+
             value.bind( function ( newVal ) {
-                settings[ id ] = parseInt( newVal, 10 ) || settings[ id ];
+                var n = parseInt( newVal, 10 );
+                if ( n > 0 ) {
+                    settings[ id ] = n;
+                }
                 injectStyle();
             } );
         } );

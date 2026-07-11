@@ -312,13 +312,33 @@ img {
     position: relative; /* positioning context for mega-menu */
 }
 
-.logo img {
-    height: 42px;
-    transition: var(--transition-normal);
+/* Logo height driven by --logo-h-* CSS vars (set by Customizer / PHP inline CSS) */
+.logo img,
+.logo .custom-logo {
+    height: var(--logo-h-desktop, 42px);
+    width: auto;
+    transition: height var(--transition-normal);
 }
 
-.main-header.scrolled .logo img {
-    height: 34px;
+.main-header.scrolled .logo img,
+.main-header.scrolled .logo .custom-logo {
+    height: calc(var(--logo-h-desktop, 42px) * 0.82);
+}
+
+@media (max-width: 768px) {
+    .logo img,
+    .logo .custom-logo {
+        height: var(--logo-h-mobile, 32px);
+    }
+    .main-header.scrolled .logo img,
+    .main-header.scrolled .logo .custom-logo {
+        height: calc(var(--logo-h-mobile, 32px) * 0.82);
+    }
+    .footer-logo,
+    .col-info .custom-logo-link img,
+    .col-info .custom-logo {
+        height: var(--footer-logo-h-mobile, 32px);
+    }
 }
 
 .logo-dark {
@@ -1475,8 +1495,11 @@ img {
     background-color: var(--primary);
 }
 
-.footer-logo {
-    height: 42px;
+.footer-logo,
+.col-info .custom-logo-link img,
+.col-info .custom-logo {
+    height: var(--footer-logo-h-desktop, 42px);
+    width: auto;
     margin-bottom: 20px;
 }
 
