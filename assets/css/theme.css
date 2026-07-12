@@ -1978,7 +1978,7 @@ img {
 
     /* ── Drill-down wrapper (JS-injected) ──────────────────── */
     .mobile-nav-wrapper {
-        display: flex;
+        display: flex !important; /* must beat the global display:none !important */
         flex-direction: column;
         flex: 1;
         min-height: 0;
