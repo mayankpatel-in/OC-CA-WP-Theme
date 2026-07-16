@@ -1126,13 +1126,17 @@ img {
 }
 
 .team-photo {
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    border-radius: var(--border-radius-lg);
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
     overflow: hidden;
     background: var(--primary-light);
     margin-bottom: 20px;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 8px 32px rgba(49,144,231,0.18);
+    border: 4px solid var(--white);
+    outline: 3px solid var(--primary);
 }
 .team-photo img {
     width: 100%;
@@ -1236,8 +1240,8 @@ img {
         align-items: center;
     }
     .team-photo {
-        aspect-ratio: 1;
-        border-radius: 50%;
+        width: 110px;
+        margin: 0;
         margin-bottom: 0;
     }
     .team-photo-initials { font-size: 2.5rem; }
