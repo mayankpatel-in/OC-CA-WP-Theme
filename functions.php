@@ -77,7 +77,7 @@ function oc_ca_theme_scripts() {
         'oc-ca-theme-css',
         get_template_directory_uri() . '/assets/css/theme.css',
         array( 'oc-ca-google-fonts', 'oc-ca-fontawesome' ),
-        '1.0.7'
+        '1.0.8'
     );
 
     // WordPress style.css (required)
@@ -85,7 +85,7 @@ function oc_ca_theme_scripts() {
         'oc-ca-style',
         get_stylesheet_uri(),
         array( 'oc-ca-theme-css' ),
-        '1.0.7'
+        '1.0.8'
     );
 
     // Main Theme JS (deferred, in footer)
@@ -93,7 +93,7 @@ function oc_ca_theme_scripts() {
         'oc-ca-theme-js',
         get_template_directory_uri() . '/assets/js/theme.js',
         array(),
-        '1.0.7',
+        '1.0.8',
         true // load in footer
     );
 
@@ -433,6 +433,44 @@ function oc_ca_customize_register( $wp_customize ) {
     }
 
     // ---- Footer Bar ----
+    // ── Home: Services Grid ──────────────────────────────────────────────
+    $wp_customize->add_section( 'oc_ca_home_services', array(
+        'title'       => __( 'Home – Services Grid', 'oc-ca-theme' ),
+        'description' => __( 'Edit the 8 service cards shown on the homepage. Set Price to 0 to hide it. Choose a page for the "More" button.', 'oc-ca-theme' ),
+        'priority'    => 36,
+    ) );
+
+    $home_service_defaults = array(
+        1 => array( 'icon' => 'fa-file-invoice',           'title' => 'GST Registration',    'desc' => 'Get your GST number in 3 days with complete ARN registration and 1-month comprehensive filing support.', 'price' => 2800 ),
+        2 => array( 'icon' => 'fa-building-shield',        'title' => 'Company Registration', 'desc' => 'Incorporate your Private Limited or LLP with AOA, MOA, COI, DSC, PAN & TAN secured in just 15 days.',   'price' => 9800 ),
+        3 => array( 'icon' => 'fa-users-gear',             'title' => 'Payroll Processing',   'desc' => 'Accurate monthly payroll processing with full compliance management for PF, ESIC, PT, and TDS deductions.', 'price' => 1499 ),
+        4 => array( 'icon' => 'fa-user-tie',               'title' => 'Proprietorship',       'desc' => 'Start a sole proprietorship business managed, owned, and controlled by a single individual securely.',    'price' => 1499 ),
+        5 => array( 'icon' => 'fa-receipt',                'title' => 'GST Filing',           'desc' => 'Accurate monthly or quarterly GST return files prepared by certified experts to keep your compliance clean.', 'price' => 999 ),
+        6 => array( 'icon' => 'fa-magnifying-glass-chart', 'title' => 'Tax Audit',            'desc' => 'Deep review and evaluation of your business books and returns by Chartered Accountants to ensure accuracy.', 'price' => 15000 ),
+        7 => array( 'icon' => 'fa-hand-holding-dollar',    'title' => 'Income Tax Filing',    'desc' => 'File online returns with customized advisory inputs from tax specialists to guarantee maximum tax savings.', 'price' => 1499 ),
+        8 => array( 'icon' => 'fa-cloud-arrow-up',         'title' => 'Cloud Accounting',     'desc' => 'Modern books setup using Zoho, QuickBooks, and Wave. Ideal for small, medium, and fast-growing companies.', 'price' => 3800 ),
+    );
+
+    foreach ( $home_service_defaults as $n => $d ) {
+        $pfx = 'home_service_' . $n . '_';
+        $lbl = "Service {$n}";
+
+        $wp_customize->add_setting( $pfx . 'icon',  array( 'default' => $d['icon'],  'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
+        $wp_customize->add_control( $pfx . 'icon',  array( 'label' => "{$lbl}: Icon class (e.g. fa-receipt)", 'section' => 'oc_ca_home_services', 'type' => 'text' ) );
+
+        $wp_customize->add_setting( $pfx . 'title', array( 'default' => $d['title'], 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
+        $wp_customize->add_control( $pfx . 'title', array( 'label' => "{$lbl}: Title", 'section' => 'oc_ca_home_services', 'type' => 'text' ) );
+
+        $wp_customize->add_setting( $pfx . 'desc',  array( 'default' => $d['desc'],  'sanitize_callback' => 'wp_strip_all_tags', 'transport' => 'refresh' ) );
+        $wp_customize->add_control( $pfx . 'desc',  array( 'label' => "{$lbl}: Description", 'section' => 'oc_ca_home_services', 'type' => 'textarea' ) );
+
+        $wp_customize->add_setting( $pfx . 'price', array( 'default' => $d['price'], 'sanitize_callback' => 'absint', 'transport' => 'refresh' ) );
+        $wp_customize->add_control( $pfx . 'price', array( 'label' => "{$lbl}: Starting price \u{20B9} (0 = hide)", 'section' => 'oc_ca_home_services', 'type' => 'number', 'input_attrs' => array( 'min' => 0, 'step' => 1 ) ) );
+
+        $wp_customize->add_setting( $pfx . 'page',  array( 'default' => 0, 'sanitize_callback' => 'absint', 'transport' => 'refresh' ) );
+        $wp_customize->add_control( $pfx . 'page',  array( 'label' => "{$lbl}: \"More\" button page", 'section' => 'oc_ca_home_services', 'type' => 'dropdown-pages' ) );
+    }
+
     $wp_customize->add_section( 'oc_ca_footer_bar', array(
         'title'    => __( 'Footer Bar', 'oc-ca-theme' ),
         'priority' => 37,

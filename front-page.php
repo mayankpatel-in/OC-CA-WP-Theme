@@ -107,27 +107,43 @@ get_header();
 
         <div class="services-grid">
             <?php
-            $services = array(
-                array( 'icon' => 'fa-file-invoice', 'title' => 'GST Registration', 'desc' => 'Get your GST number in 3 days with complete ARN registration and 1-month comprehensive filing support.' ),
-                array( 'icon' => 'fa-building-shield', 'title' => 'Company Registration', 'desc' => 'Incorporate your Private Limited or LLP with AOA, MOA, COI, DSC, PAN &amp; TAN secured in just 15 days.' ),
-                array( 'icon' => 'fa-tower-cell', 'title' => 'DOT/OSP Registration', 'desc' => 'Specialized license filing for IT, BPO, and KPO companies operating under the Department of Telecommunication.' ),
-                array( 'icon' => 'fa-user-tie', 'title' => 'Proprietorship', 'desc' => 'Start a sole proprietorship business managed, owned, and controlled by a single individual securely.' ),
-                array( 'icon' => 'fa-receipt', 'title' => 'GST Filing', 'desc' => 'Accurate monthly or quarterly GST return files prepared by certified experts to keep your compliance clean.' ),
-                array( 'icon' => 'fa-magnifying-glass-chart', 'title' => 'Tax Audit', 'desc' => 'Deep review and evaluation of your business books and returns by Chartered Accountants to ensure accuracy.' ),
-                array( 'icon' => 'fa-hand-holding-dollar', 'title' => 'Income Tax Filing', 'desc' => 'File online returns with customized advisory inputs from tax specialists to guarantee maximum tax savings.' ),
-                array( 'icon' => 'fa-cloud-arrow-up', 'title' => 'Cloud Accounting', 'desc' => 'Modern books setup using Zoho, QuickBooks, and Wave. Ideal for small, medium, and fast-growing companies.' ),
+            $svc_defaults = array(
+                1 => array( 'icon' => 'fa-file-invoice',           'title' => 'GST Registration',    'desc' => 'Get your GST number in 3 days with complete ARN registration and 1-month comprehensive filing support.', 'price' => 2800 ),
+                2 => array( 'icon' => 'fa-building-shield',        'title' => 'Company Registration', 'desc' => 'Incorporate your Private Limited or LLP with AOA, MOA, COI, DSC, PAN &amp; TAN secured in just 15 days.',  'price' => 9800 ),
+                3 => array( 'icon' => 'fa-users-gear',             'title' => 'Payroll Processing',   'desc' => 'Accurate monthly payroll processing with full compliance management for PF, ESIC, PT, and TDS deductions.', 'price' => 1499 ),
+                4 => array( 'icon' => 'fa-user-tie',               'title' => 'Proprietorship',       'desc' => 'Start a sole proprietorship business managed, owned, and controlled by a single individual securely.',    'price' => 1499 ),
+                5 => array( 'icon' => 'fa-receipt',                'title' => 'GST Filing',           'desc' => 'Accurate monthly or quarterly GST return files prepared by certified experts to keep your compliance clean.', 'price' => 999 ),
+                6 => array( 'icon' => 'fa-magnifying-glass-chart', 'title' => 'Tax Audit',            'desc' => 'Deep review and evaluation of your business books and returns by Chartered Accountants to ensure accuracy.', 'price' => 15000 ),
+                7 => array( 'icon' => 'fa-hand-holding-dollar',    'title' => 'Income Tax Filing',    'desc' => 'File online returns with customized advisory inputs from tax specialists to guarantee maximum tax savings.', 'price' => 1499 ),
+                8 => array( 'icon' => 'fa-cloud-arrow-up',         'title' => 'Cloud Accounting',     'desc' => 'Modern books setup using Zoho, QuickBooks, and Wave. Ideal for small, medium, and fast-growing companies.', 'price' => 3800 ),
             );
-            foreach ( $services as $service ) :
+
+            for ( $n = 1; $n <= 8; $n++ ) :
+                $d     = $svc_defaults[ $n ];
+                $pfx   = 'home_service_' . $n . '_';
+                $icon  = sanitize_html_class( get_theme_mod( $pfx . 'icon',  $d['icon'] ) );
+                $title = esc_html( get_theme_mod( $pfx . 'title', $d['title'] ) );
+                $desc  = esc_html( get_theme_mod( $pfx . 'desc',  $d['desc'] ) );
+                $price = absint( get_theme_mod( $pfx . 'price', $d['price'] ) );
+                $pid   = absint( get_theme_mod( $pfx . 'page',  0 ) );
+                $link  = ( $pid > 0 ) ? esc_url( get_permalink( $pid ) ) : '#';
             ?>
             <div class="service-card">
-                <div class="service-icon"><i class="fa-solid <?php echo esc_attr( $service['icon'] ); ?>"></i></div>
-                <h3><?php echo $service['title']; ?></h3>
-                <p><?php echo $service['desc']; ?></p>
-                <div class="service-hover-content">
-                    <button class="btn btn-accent btn-sm quick-quote-service" data-service="<?php echo esc_attr( $service['title'] ); ?>">Get Quote</button>
+                <div class="service-icon"><i class="fa-solid <?php echo esc_attr( $icon ); ?>"></i></div>
+                <h3><?php echo $title; ?></h3>
+                <p><?php echo $desc; ?></p>
+                <div class="service-footer">
+                    <?php if ( $price > 0 ) : ?>
+                    <div class="service-price">
+                        Starting from<strong>&#8377;<?php echo number_format( $price ); ?></strong>
+                    </div>
+                    <?php endif; ?>
+                    <a href="<?php echo $link; ?>" class="btn btn-outline btn-sm service-more-btn">
+                        More <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                    </a>
                 </div>
             </div>
-            <?php endforeach; ?>
+            <?php endfor; ?>
         </div>
     </div>
 </section>
