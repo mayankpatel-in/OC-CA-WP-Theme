@@ -471,9 +471,82 @@ function oc_ca_customize_register( $wp_customize ) {
         $wp_customize->add_control( $pfx . 'page',  array( 'label' => "{$lbl}: \"More\" button page", 'section' => 'oc_ca_home_services', 'type' => 'dropdown-pages' ) );
     }
 
+    // ── Home – Team Section ─────────────────────────────────────────────────
+    $wp_customize->add_section( 'oc_ca_home_team', array(
+        'title'    => __( 'Home – Team Section', 'oc-ca-theme' ),
+        'priority' => 37,
+    ) );
+
+    $team_defaults = array(
+        1 => array(
+            'name'   => 'CA Amit Bhutada',
+            'role'   => 'Founder & Managing Partner',
+            'img'    => 'ca-amit.png',
+            'bio'    => 'CA Amit Bhutada is the founder of A N Bhutada & Co. With over 10 years of professional experience, he advises Indian and international businesses on company incorporation, taxation, regulatory compliance, and business growth. He specializes in helping startups, SMEs, and overseas investors establish and manage their operations in India.',
+            'skills' => "Private Limited Company Incorporation\nInternational Business Setup In India\nCorporate Compliances\nGST Advisory\nBusiness Advisory for Startups & Growing Businesses",
+        ),
+        2 => array(
+            'name'   => 'CA Ravish Maniyar',
+            'role'   => 'Associate – Audit & Advisory',
+            'img'    => 'ca-ravish.jpeg',
+            'bio'    => 'CA Ravish Maniyar brings over 15 years of experience in audit, assurance, and financial advisory services. He has extensive expertise in conducting statutory, tax, bank, and internal audits across diverse industries while helping organizations strengthen governance and internal controls.',
+            'skills' => "Statutory Audits & Tax Audits\nBank Audits & Government Audits\nInternal Control & Compliance Systems\nRisk Management & Financial Advisory",
+        ),
+        3 => array(
+            'name'   => 'CS, Adv. Priyanka Bajaj',
+            'role'   => 'Company Secretary & Advocate',
+            'img'    => 'cs-priyanka.jpeg',
+            'bio'    => 'CS Priyanka Bajaj has more than 10 years of experience in corporate laws and secretarial compliance. She advises companies on corporate governance, FEMA regulations, business structuring, and legal compliance under the Companies Act.',
+            'skills' => "Corporate Compliances\nFEMA Compliances\nCompany Setup Advisory\nStartup Advisory Services",
+        ),
+        4 => array(
+            'name'   => 'Avinash Sable',
+            'role'   => 'Senior Associate – Compliance',
+            'img'    => 'avinash-sable.jpg',
+            'bio'    => 'Avinash Sable is a Commerce Graduate with over 5 years of experience in accounting, taxation, payroll, and statutory compliance. He serves as a dedicated point of contact for clients, ensuring timely completion of routine compliance requirements.',
+            'skills' => "Accounting\nPayroll Processing\nGST, TDS & Tax Filings\nStartup Advisory Services",
+        ),
+        5 => array(
+            'name'   => 'Yukta Shah',
+            'role'   => 'Associate – Taxation & Audit',
+            'img'    => 'yukta-shah.jpeg',
+            'bio'    => 'Yukta Shah is a Commerce Graduate and CA Final student with over 5 years of practical experience in accounting, audit, and taxation. She supports businesses in maintaining statutory compliance and provides assistance in audit and indirect tax matters.',
+            'skills' => "GST Compliances\nStatutory Auditing\nTax Planning\nIndirect Tax Advisory",
+        ),
+        6 => array(
+            'name'   => 'Prabhanjan Patil',
+            'role'   => 'Associate – Corporate & FEMA',
+            'img'    => 'prabhanjan-patil.jpg',
+            'bio'    => 'Prabhanjan Patil has extensive experience in corporate compliance, company law, and FEMA regulations. He advises Indian companies and foreign investors on regulatory compliance, FDI transactions, and corporate structuring, helping businesses remain compliant with the Companies Act and FEMA regulations.',
+            'skills' => "ESOP Structuring & Compliance\nForeign Direct Investment Compliances\nCorporate Advisory & Secretarial Support\nFEMA Compliances",
+        ),
+        7 => array( 'name' => '', 'role' => '', 'img' => '', 'bio' => '', 'skills' => '' ),
+        8 => array( 'name' => '', 'role' => '', 'img' => '', 'bio' => '', 'skills' => '' ),
+    );
+
+    foreach ( $team_defaults as $n => $d ) {
+        $pfx = 'home_team_' . $n . '_';
+        $lbl = 'Member ' . $n;
+
+        $wp_customize->add_setting( $pfx . 'name',   array( 'default' => $d['name'],   'sanitize_callback' => 'sanitize_text_field',    'transport' => 'refresh' ) );
+        $wp_customize->add_control( $pfx . 'name',   array( 'label' => "{$lbl}: Name",                               'section' => 'oc_ca_home_team', 'type' => 'text' ) );
+
+        $wp_customize->add_setting( $pfx . 'role',   array( 'default' => $d['role'],   'sanitize_callback' => 'sanitize_text_field',    'transport' => 'refresh' ) );
+        $wp_customize->add_control( $pfx . 'role',   array( 'label' => "{$lbl}: Role / Designation",                 'section' => 'oc_ca_home_team', 'type' => 'text' ) );
+
+        $wp_customize->add_setting( $pfx . 'img',    array( 'default' => $d['img'],    'sanitize_callback' => 'sanitize_text_field',    'transport' => 'refresh' ) );
+        $wp_customize->add_control( $pfx . 'img',    array( 'label' => "{$lbl}: Image filename (e.g. ca-amit.png) or full URL", 'section' => 'oc_ca_home_team', 'type' => 'text' ) );
+
+        $wp_customize->add_setting( $pfx . 'bio',    array( 'default' => $d['bio'],    'sanitize_callback' => 'sanitize_textarea_field', 'transport' => 'refresh' ) );
+        $wp_customize->add_control( $pfx . 'bio',    array( 'label' => "{$lbl}: Bio paragraph",                      'section' => 'oc_ca_home_team', 'type' => 'textarea' ) );
+
+        $wp_customize->add_setting( $pfx . 'skills', array( 'default' => $d['skills'], 'sanitize_callback' => 'sanitize_textarea_field', 'transport' => 'refresh' ) );
+        $wp_customize->add_control( $pfx . 'skills', array( 'label' => "{$lbl}: Skills — one per line",              'section' => 'oc_ca_home_team', 'type' => 'textarea' ) );
+    }
+
     $wp_customize->add_section( 'oc_ca_footer_bar', array(
         'title'    => __( 'Footer Bar', 'oc-ca-theme' ),
-        'priority' => 37,
+        'priority' => 38,
     ) );
 
     $wp_customize->add_setting( 'footer_credit_text', array(

@@ -277,57 +277,27 @@ get_header();
         </div>
 
         <?php
-        $team = array(
-            array(
-                'id'     => 'amit',
-                'name'   => 'CA Amit Bhutada',
-                'role'   => 'Founder &amp; Managing Partner',
-                'img'    => 'ca-amit.png',
-                'bio'    => 'CA Amit Bhutada is the founder of A N Bhutada &amp; Co. With over 10 years of professional experience, he advises Indian and international businesses on company incorporation, taxation, regulatory compliance, and business growth. He specializes in helping startups, SMEs, and overseas investors establish and manage their operations in India.',
-                'skills' => array( 'Private Limited Company Incorporation', 'International Business Setup In India', 'Corporate Compliances', 'GST Advisory', 'Business Advisory for Startups &amp; Growing Businesses' ),
-            ),
-            array(
-                'id'     => 'ravish',
-                'name'   => 'CA Ravish Maniyar',
-                'role'   => 'Associate – Audit &amp; Advisory',
-                'img'    => 'ca-ravish.jpeg',
-                'bio'    => 'CA Ravish Maniyar brings over 15 years of experience in audit, assurance, and financial advisory services. He has extensive expertise in conducting statutory, tax, bank, and internal audits across diverse industries while helping organizations strengthen governance and internal controls.',
-                'skills' => array( 'Statutory Audits &amp; Tax Audits', 'Bank Audits &amp; Government Audits', 'Internal Control &amp; Compliance Systems', 'Risk Management &amp; Financial Advisory' ),
-            ),
-            array(
-                'id'     => 'priyanka',
-                'name'   => 'CS, Adv. Priyanka Bajaj',
-                'role'   => 'Company Secretary &amp; Advocate',
-                'img'    => 'cs-priyanka.jpeg',
-                'bio'    => 'CS Priyanka Bajaj has more than 10 years of experience in corporate laws and secretarial compliance. She advises companies on corporate governance, FEMA regulations, business structuring, and legal compliance under the Companies Act.',
-                'skills' => array( 'Corporate Compliances', 'FEMA Compliances', 'Company Setup Advisory', 'Startup Advisory Services' ),
-            ),
-            array(
-                'id'     => 'avinash',
-                'name'   => 'Avinash Sable',
-                'role'   => 'Senior Associate – Compliance',
-                'img'    => 'avinash-sable.jpg',
-                'bio'    => 'Avinash Sable is a Commerce Graduate with over 5 years of experience in accounting, taxation, payroll, and statutory compliance. He serves as a dedicated point of contact for clients, ensuring timely completion of routine compliance requirements.',
-                'skills' => array( 'Accounting', 'Payroll Processing', 'GST, TDS &amp; Tax Filings', 'Startup Advisory Services' ),
-            ),
-            array(
-                'id'     => 'yukta',
-                'name'   => 'Yukta Shah',
-                'role'   => 'Associate – Taxation &amp; Audit',
-                'img'    => 'yukta-shah.jpeg',
-                'bio'    => 'Yukta Shah is a Commerce Graduate and CA Final student with over 5 years of practical experience in accounting, audit, and taxation. She supports businesses in maintaining statutory compliance and provides assistance in audit and indirect tax matters.',
-                'skills' => array( 'GST Compliances', 'Statutory Auditing', 'Tax Planning', 'Indirect Tax Advisory' ),
-            ),
-            array(
-                'id'     => 'prabhanjan',
-                'name'   => 'Prabhanjan Patil',
-                'role'   => 'Associate – Corporate &amp; FEMA',
-                'img'    => 'prabhanjan-patil.jpg',
-                'bio'    => 'Prabhanjan Patil has extensive experience in corporate compliance, company law, and FEMA regulations. He advises Indian companies and foreign investors on regulatory compliance, FDI transactions, and corporate structuring, helping businesses remain compliant with the Companies Act and FEMA regulations.',
-                'skills' => array( 'ESOP Structuring &amp; Compliance', 'Foreign Direct Investment Compliances', 'Corporate Advisory &amp; Secretarial Support', 'FEMA Compliances' ),
-            ),
-        );
         $img_base = get_template_directory_uri() . '/assets/img/team/';
+        $team     = array();
+        for ( $n = 1; $n <= 8; $n++ ) {
+            $pfx  = 'home_team_' . $n . '_';
+            $name = trim( get_theme_mod( $pfx . 'name', '' ) );
+            if ( '' === $name ) continue;
+            $img_val = get_theme_mod( $pfx . 'img', '' );
+            $img_url = ( $img_val && ( 0 === strpos( $img_val, 'http' ) || 0 === strpos( $img_val, '/' ) ) )
+                       ? esc_url( $img_val )
+                       : ( $img_val ? esc_url( $img_base . $img_val ) : '' );
+            $skills_raw = get_theme_mod( $pfx . 'skills', '' );
+            $skills     = array_values( array_filter( array_map( 'trim', explode( "\n", $skills_raw ) ) ) );
+            $team[] = array(
+                'id'     => 'member-' . $n,
+                'name'   => $name,
+                'role'   => get_theme_mod( $pfx . 'role', '' ),
+                'img'    => $img_url,
+                'bio'    => get_theme_mod( $pfx . 'bio', '' ),
+                'skills' => $skills,
+            );
+        }
         ?>
 
         <!-- Tab buttons -->
@@ -339,7 +309,7 @@ get_header();
                         aria-selected="<?php echo $i === 0 ? 'true' : 'false'; ?>"
                         aria-controls="member-<?php echo esc_attr( $m['id'] ); ?>"
                         data-member="<?php echo esc_attr( $m['id'] ); ?>">
-                    <?php echo $m['name']; ?>
+                    <?php echo esc_html( $m['name'] ); ?>
                 </button>
                 <?php endforeach; ?>
             </div>
@@ -374,18 +344,18 @@ get_header();
                             <?php endif; ?>
                         </div>
                         <div class="team-name-block">
-                            <h3><?php echo $m['name']; ?></h3>
-                            <span class="team-role"><?php echo $m['role']; ?></span>
+                            <h3><?php echo esc_html( $m['name'] ); ?></h3>
+                            <span class="team-role"><?php echo esc_html( $m['role'] ); ?></span>
                         </div>
                     </div>
 
                     <!-- Bio + specializations -->
                     <div class="team-info-col">
-                        <p class="team-bio"><?php echo $m['bio']; ?></p>
+                        <p class="team-bio"><?php echo esc_html( $m['bio'] ); ?></p>
                         <h4 class="team-skills-heading">Areas of Expertise</h4>
                         <ul class="team-skills">
                             <?php foreach ( $m['skills'] as $skill ) : ?>
-                            <li><i class="fa-solid fa-check" aria-hidden="true"></i><?php echo $skill; ?></li>
+                            <li><i class="fa-solid fa-check" aria-hidden="true"></i><?php echo esc_html( $skill ); ?></li>
                             <?php endforeach; ?>
                         </ul>
                     </div>
