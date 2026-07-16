@@ -25,7 +25,7 @@ get_header();
             <p>We provide comprehensive CA &amp; CS services across PAN India — Company Registration, GST, Tax Filing, Auditing, Payroll, and Accounting — all under one roof. Let us handle your compliance so you can focus on growing your business.</p>
             <div class="hero-actions">
                 <a href="#services" class="btn btn-accent"><i class="fa-solid fa-circle-arrow-down"></i> Explore Services</a>
-                <button class="btn btn-outline" id="heroCallbackBtn"><i class="fa-solid fa-phone-volume"></i> Request Callback</button>
+                <button class="btn btn-outline" id="heroCallbackBtn"><i class="fa-solid fa-phone-volume"></i> Setup Free Advise Call</button>
             </div>
 
             <!-- Trust indicators -->
