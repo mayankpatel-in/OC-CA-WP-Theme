@@ -22,18 +22,34 @@ get_header();
         <div class="hero-text-box">
             <span class="badge">A N Bhutada &amp; Co | Chartered Accountants</span>
             <h1>Are you searching for a One-Stop Registrations, Accounting, Tax &amp; Audit Firm?</h1>
-            <p>We provide comprehensive services under one roof in the field of Company Registration, Accounts Outsourcing, Auditing, GST Audit, and Tax Filing in Pune, India. Let us handle your financial complexities so you can focus on building your business.</p>
+            <p>We provide comprehensive CA &amp; CS services across PAN India — Company Registration, GST, Tax Filing, Auditing, Payroll, and Accounting — all under one roof. Let us handle your compliance so you can focus on growing your business.</p>
             <div class="hero-actions">
                 <a href="#services" class="btn btn-accent"><i class="fa-solid fa-circle-arrow-down"></i> Explore Services</a>
                 <button class="btn btn-outline" id="heroCallbackBtn"><i class="fa-solid fa-phone-volume"></i> Request Callback</button>
             </div>
+
+            <!-- Trust indicators -->
+            <div class="hero-trust">
+                <div class="hero-trust-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Services Across PAN India</span>
+                </div>
+                <div class="hero-trust-item">
+                    <i class="fa-solid fa-certificate"></i>
+                    <span>Zoho Certified Partner</span>
+                </div>
+                <div class="hero-trust-item">
+                    <i class="fa-brands fa-google"></i>
+                    <span>4.9&nbsp;<i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star-half-stroke" aria-hidden="true"></i> Google Rating</span>
+                </div>
+            </div>
         </div>
 
-        <!-- Quick Quote Form -->
+        <!-- Book Free Consultation Form -->
         <div class="hero-form-box">
             <div class="form-wrapper">
-                <h3>Get a Quote in Minutes</h3>
-                <p>Tell us your compliance needs and receive a transparent pricing estimate.</p>
+                <h3>Book Free Consultation</h3>
+                <p>Share your details and our senior CA will call you within 15 minutes.</p>
                 <form id="heroQuoteForm" class="interactive-form">
                     <div class="form-group">
                         <label for="quoteName"><i class="fa-solid fa-user"></i> Full Name</label>
@@ -49,7 +65,7 @@ get_header();
                             <input type="email" id="quoteEmail" name="email" placeholder="Work email" required>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-accent btn-full">Submit Request <i class="fa-solid fa-arrow-right-long"></i></button>
+                    <button type="submit" class="btn btn-accent btn-full">Book Consultation <i class="fa-solid fa-arrow-right-long"></i></button>
                 </form>
                 <div class="form-success" id="heroFormSuccess" style="display:none; text-align:center;">
                     <i class="fa-solid fa-circle-check"></i>

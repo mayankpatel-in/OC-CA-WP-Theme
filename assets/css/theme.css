@@ -625,6 +625,40 @@ img {
     flex-wrap: wrap;
 }
 
+/* Hero Trust Strip */
+.hero-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.hero-trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px);
+    color: var(--white);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 50px;
+    white-space: nowrap;
+}
+
+.hero-trust-item i {
+    font-size: 0.85rem;
+    color: var(--accent);
+}
+
+.hero-trust-item .fa-star,
+.hero-trust-item .fa-star-half-stroke {
+    font-size: 0.7rem;
+    color: #f5c518;
+}
+
 /* Interactive Form Box */
 .hero-form-box {
     background-color: var(--white);
