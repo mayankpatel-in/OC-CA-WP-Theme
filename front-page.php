@@ -266,7 +266,7 @@ get_header();
                 'id'     => 'amit',
                 'name'   => 'CA Amit Bhutada',
                 'role'   => 'Founder &amp; Managing Partner',
-                'img'    => 'ca-amit.jpeg',
+                'img'    => 'ca-amit.png',
                 'bio'    => 'CA Amit Bhutada is the founder of A N Bhutada &amp; Co. With over 10 years of professional experience, he advises Indian and international businesses on company incorporation, taxation, regulatory compliance, and business growth. He specializes in helping startups, SMEs, and overseas investors establish and manage their operations in India.',
                 'skills' => array( 'Private Limited Company Incorporation', 'International Business Setup In India', 'Corporate Compliances', 'GST Advisory', 'Business Advisory for Startups &amp; Growing Businesses' ),
             ),

@@ -77,7 +77,7 @@ function oc_ca_theme_scripts() {
         'oc-ca-theme-css',
         get_template_directory_uri() . '/assets/css/theme.css',
         array( 'oc-ca-google-fonts', 'oc-ca-fontawesome' ),
-        '1.0.9'
+        '1.1.0'
     );
 
     // WordPress style.css (required)
@@ -85,7 +85,7 @@ function oc_ca_theme_scripts() {
         'oc-ca-style',
         get_stylesheet_uri(),
         array( 'oc-ca-theme-css' ),
-        '1.0.9'
+        '1.1.0'
     );
 
     // Main Theme JS (deferred, in footer)
@@ -93,7 +93,7 @@ function oc_ca_theme_scripts() {
         'oc-ca-theme-js',
         get_template_directory_uri() . '/assets/js/theme.js',
         array(),
-        '1.0.9',
+        '1.1.0',
         true // load in footer
     );
 
