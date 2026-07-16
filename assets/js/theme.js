@@ -531,6 +531,27 @@ document.addEventListener('DOMContentLoaded', () => {
     setupFormSubmission('subpageHeroQuoteForm', 'subpageHeroSuccess');
     setupFormSubmission('sidebarConsultForm', 'sidebarConsultSuccess');
 
+    /* ==========================================================================
+       9. TEAM SECTION — TAB SWITCHING
+       ========================================================================== */
+    const teamTabs   = document.querySelectorAll('.team-tab');
+    const teamPanels = document.querySelectorAll('.team-panel');
+
+    teamTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const id = tab.dataset.member;
+            teamTabs.forEach(t => {
+                t.classList.remove('active');
+                t.setAttribute('aria-selected', 'false');
+            });
+            teamPanels.forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            const panel = document.getElementById('member-' + id);
+            if (panel) panel.classList.add('active');
+        });
+    });
+
     // Footer newsletter
     const newsletterForm = document.getElementById('newsletterForm');
     const newsletterSuccess = document.getElementById('newsletterSuccess');

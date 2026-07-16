@@ -893,6 +893,16 @@ img {
     border-color: var(--primary);
 }
 
+/* Touch devices: show top line + filled More button without hover */
+@media (hover: none) {
+    .service-card::before { transform: scaleX(1); }
+    .service-more-btn {
+        background-color: var(--primary);
+        color: var(--white);
+        border-color: var(--primary);
+    }
+}
+
 /* --------------------------------------------------------------------------
    7. INTERACTIVE DETAIL SLIDER
    -------------------------------------------------------------------------- */
@@ -1041,7 +1051,209 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   9. CTA BANNER SECTION WITH FORM
+   9. TEAM SECTION
+   -------------------------------------------------------------------------- */
+.team-section {
+    padding: 100px 0;
+    background: var(--neutral-bg);
+}
+
+/* ── Scrollable tab row ────────────────────────────────────── */
+.team-tabs-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-bottom: 48px;
+}
+.team-tabs-wrapper::-webkit-scrollbar { display: none; }
+
+.team-tabs {
+    display: flex;
+    gap: 10px;
+    padding-bottom: 4px;
+    min-width: max-content;
+}
+
+.team-tab {
+    padding: 10px 22px;
+    border: 2px solid var(--neutral-medium);
+    border-radius: 50px;
+    background: transparent;
+    color: var(--neutral-medium);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.87rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition-fast);
+    line-height: 1;
+}
+.team-tab:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+.team-tab.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--white);
+}
+
+/* ── Panel visibility ──────────────────────────────────────── */
+.team-panel {
+    display: none;
+}
+.team-panel.active {
+    display: block;
+    animation: teamFadeIn 0.3s ease;
+}
+@keyframes teamFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Panel grid: photo col + info col ─────────────────────── */
+.team-panel-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+/* Photo column */
+.team-photo-col {
+    position: sticky;
+    top: calc(var(--header-h, 66px) + 24px);
+}
+
+.team-photo {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    background: var(--primary-light);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-md);
+}
+.team-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+}
+.team-photo-initials {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -2px;
+}
+
+.team-name-block h3 {
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+    color: var(--neutral-darkest);
+}
+.team-role {
+    font-size: 0.87rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Info column */
+.team-bio {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--neutral-dark);
+    margin-bottom: 32px;
+}
+
+.team-skills-heading {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--neutral-medium);
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+
+.team-skills {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.team-skills li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 18px;
+    background: var(--white);
+    border-radius: var(--border-radius-sm);
+    border-left: 3px solid var(--primary);
+    font-size: 0.9rem;
+    color: var(--neutral-dark);
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+}
+.team-skills li i {
+    color: var(--primary);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    .team-panel-grid {
+        grid-template-columns: 220px 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .team-section { padding: 70px 0; }
+
+    .team-panel-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    /* Photo + name side by side on mobile */
+    .team-photo-col {
+        position: static;
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        gap: 20px;
+        align-items: center;
+    }
+    .team-photo {
+        aspect-ratio: 1;
+        border-radius: 50%;
+        margin-bottom: 0;
+    }
+    .team-photo-initials { font-size: 2.5rem; }
+    .team-name-block h3  { font-size: 1.1rem; }
+
+    .team-bio { font-size: 0.93rem; }
+
+    .team-skills {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .team-skills li { padding: 11px 14px; font-size: 0.87rem; }
+}
+
+/* --------------------------------------------------------------------------
+   10. CTA BANNER SECTION WITH FORM
    -------------------------------------------------------------------------- */
 .cta-banner-section {
     background: linear-gradient(135deg, var(--neutral-darkest) 0%, #1e293b 100%);

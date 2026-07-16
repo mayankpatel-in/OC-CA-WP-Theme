@@ -250,6 +250,138 @@ get_header();
     </div>
 </section>
 
+<!-- TEAM SECTION -->
+<section class="team-section">
+    <div class="container">
+        <div class="section-header align-center">
+            <span class="sub-title">Our Experts</span>
+            <h2>Meet Our Team</h2>
+            <div class="heading-line"></div>
+            <p>Qualified professionals with deep domain expertise across taxation, audit, corporate law, and financial compliance.</p>
+        </div>
+
+        <?php
+        $team = array(
+            array(
+                'id'     => 'amit',
+                'name'   => 'CA Amit Bhutada',
+                'role'   => 'Founder &amp; Managing Partner',
+                'img'    => '',
+                'bio'    => 'CA Amit Bhutada is the founder of A N Bhutada &amp; Co. With over 10 years of professional experience, he advises Indian and international businesses on company incorporation, taxation, regulatory compliance, and business growth. He specializes in helping startups, SMEs, and overseas investors establish and manage their operations in India.',
+                'skills' => array( 'Private Limited Company Incorporation', 'International Business Setup In India', 'Corporate Compliances', 'GST Advisory', 'Business Advisory for Startups &amp; Growing Businesses' ),
+            ),
+            array(
+                'id'     => 'ravish',
+                'name'   => 'CA Ravish Maniyar',
+                'role'   => 'Associate – Audit &amp; Advisory',
+                'img'    => 'ca-ravish.jpeg',
+                'bio'    => 'CA Ravish Maniyar brings over 15 years of experience in audit, assurance, and financial advisory services. He has extensive expertise in conducting statutory, tax, bank, and internal audits across diverse industries while helping organizations strengthen governance and internal controls.',
+                'skills' => array( 'Statutory Audits &amp; Tax Audits', 'Bank Audits &amp; Government Audits', 'Internal Control &amp; Compliance Systems', 'Risk Management &amp; Financial Advisory' ),
+            ),
+            array(
+                'id'     => 'priyanka',
+                'name'   => 'CS, Adv. Priyanka Bajaj',
+                'role'   => 'Company Secretary &amp; Advocate',
+                'img'    => 'cs-priyanka.jpeg',
+                'bio'    => 'CS Priyanka Bajaj has more than 10 years of experience in corporate laws and secretarial compliance. She advises companies on corporate governance, FEMA regulations, business structuring, and legal compliance under the Companies Act.',
+                'skills' => array( 'Corporate Compliances', 'FEMA Compliances', 'Company Setup Advisory', 'Startup Advisory Services' ),
+            ),
+            array(
+                'id'     => 'avinash',
+                'name'   => 'Avinash Sable',
+                'role'   => 'Senior Associate – Compliance',
+                'img'    => 'avinash-sable.jpg',
+                'bio'    => 'Avinash Sable is a Commerce Graduate with over 5 years of experience in accounting, taxation, payroll, and statutory compliance. He serves as a dedicated point of contact for clients, ensuring timely completion of routine compliance requirements.',
+                'skills' => array( 'Accounting', 'Payroll Processing', 'GST, TDS &amp; Tax Filings', 'Startup Advisory Services' ),
+            ),
+            array(
+                'id'     => 'yukta',
+                'name'   => 'Yukta Shah',
+                'role'   => 'Associate – Taxation &amp; Audit',
+                'img'    => 'yukta-shah.jpeg',
+                'bio'    => 'Yukta Shah is a Commerce Graduate and CA Final student with over 5 years of practical experience in accounting, audit, and taxation. She supports businesses in maintaining statutory compliance and provides assistance in audit and indirect tax matters.',
+                'skills' => array( 'GST Compliances', 'Statutory Auditing', 'Tax Planning', 'Indirect Tax Advisory' ),
+            ),
+            array(
+                'id'     => 'prabhanjan',
+                'name'   => 'Prabhanjan Patil',
+                'role'   => 'Associate – Corporate &amp; FEMA',
+                'img'    => 'prabhanjan-patil.jpg',
+                'bio'    => 'Prabhanjan Patil has extensive experience in corporate compliance, company law, and FEMA regulations. He advises Indian companies and foreign investors on regulatory compliance, FDI transactions, and corporate structuring, helping businesses remain compliant with the Companies Act and FEMA regulations.',
+                'skills' => array( 'ESOP Structuring &amp; Compliance', 'Foreign Direct Investment Compliances', 'Corporate Advisory &amp; Secretarial Support', 'FEMA Compliances' ),
+            ),
+        );
+        $img_base = get_template_directory_uri() . '/assets/img/team/';
+        ?>
+
+        <!-- Tab buttons -->
+        <div class="team-tabs-wrapper">
+            <div class="team-tabs" role="tablist">
+                <?php foreach ( $team as $i => $m ) : ?>
+                <button class="team-tab<?php echo $i === 0 ? ' active' : ''; ?>"
+                        role="tab"
+                        aria-selected="<?php echo $i === 0 ? 'true' : 'false'; ?>"
+                        aria-controls="member-<?php echo esc_attr( $m['id'] ); ?>"
+                        data-member="<?php echo esc_attr( $m['id'] ); ?>">
+                    <?php echo $m['name']; ?>
+                </button>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- Tab panels -->
+        <div class="team-panels">
+            <?php foreach ( $team as $i => $m ) : ?>
+            <div class="team-panel<?php echo $i === 0 ? ' active' : ''; ?>"
+                 id="member-<?php echo esc_attr( $m['id'] ); ?>"
+                 role="tabpanel">
+                <div class="team-panel-grid">
+
+                    <!-- Photo + name block -->
+                    <div class="team-photo-col">
+                        <div class="team-photo">
+                            <?php if ( $m['img'] ) : ?>
+                                <img src="<?php echo esc_url( $img_base . $m['img'] ); ?>"
+                                     alt="<?php echo esc_attr( $m['name'] ); ?>"
+                                     loading="lazy">
+                            <?php else : ?>
+                                <div class="team-photo-initials">
+                                    <?php
+                                    $parts    = explode( ' ', wp_strip_all_tags( $m['name'] ) );
+                                    $initials = '';
+                                    foreach ( $parts as $p ) {
+                                        if ( ctype_alpha( $p[0] ) ) $initials .= strtoupper( $p[0] );
+                                    }
+                                    echo esc_html( substr( $initials, -2 ) );
+                                    ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="team-name-block">
+                            <h3><?php echo $m['name']; ?></h3>
+                            <span class="team-role"><?php echo $m['role']; ?></span>
+                        </div>
+                    </div>
+
+                    <!-- Bio + specializations -->
+                    <div class="team-info-col">
+                        <p class="team-bio"><?php echo $m['bio']; ?></p>
+                        <h4 class="team-skills-heading">Areas of Expertise</h4>
+                        <ul class="team-skills">
+                            <?php foreach ( $m['skills'] as $skill ) : ?>
+                            <li><i class="fa-solid fa-check" aria-hidden="true"></i><?php echo $skill; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+    </div>
+</section>
+
 <!-- CALLBACK BANNER -->
 <section class="cta-banner-section">
     <div class="container banner-grid">
