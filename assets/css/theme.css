@@ -3530,7 +3530,103 @@ img {
 .page-content ol { list-style: decimal; }
 
 /* ==========================================================================
-   25. RESPONSIVE - BLOG CARDS GRID
+   25. PAGE BUILDER CONTENT COMPATIBILITY
+   (for content copied from Elementor / WPBakery / other builders)
+   ========================================================================== */
+
+/* Grid wrapper — injected by JS around consecutive [data-anim-type] siblings */
+.oc-pb-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--pb-cols, 4), 1fr);
+    gap: 24px;
+    margin: 32px 0;
+}
+
+@media (max-width: 1024px) {
+    .oc-pb-grid {
+        grid-template-columns: repeat(var(--pb-cols-tablet, 2), 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .oc-pb-grid {
+        grid-template-columns: repeat(var(--pb-cols-mobile, 1), 1fr);
+    }
+}
+
+/* FadeInUp animation state */
+[data-anim-type="fadeInUp"] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+}
+[data-anim-type="fadeInUp"].oc-anim-done {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger delay for cards in a grid */
+.oc-pb-grid [data-anim-type]:nth-child(2) { transition-delay: 0.10s; }
+.oc-pb-grid [data-anim-type]:nth-child(3) { transition-delay: 0.20s; }
+.oc-pb-grid [data-anim-type]:nth-child(4) { transition-delay: 0.30s; }
+.oc-pb-grid [data-anim-type]:nth-child(5) { transition-delay: 0.35s; }
+.oc-pb-grid [data-anim-type]:nth-child(6) { transition-delay: 0.40s; }
+
+/* Stretch intermediate wrappers so cards are equal height */
+[data-anim-type] > div,
+[data-anim-type] > div > div {
+    height: 100%;
+}
+
+/* Card box — 3 divs deep (Elementor-style nesting) */
+[data-anim-type] > div > div > div {
+    background: var(--white);
+    border-radius: var(--border-radius-md);
+    padding: 28px 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--neutral-light);
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+[data-anim-type] > div > div > div:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+/* Card icon image */
+[data-anim-type] > div > div > div > div > img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 50%;
+    background: var(--neutral-bg);
+    padding: 4px;
+}
+
+/* Card title */
+[data-anim-type] > div > div > div > h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Section heading above an icon-card grid */
+[data-desktop-col] > div:first-child h2 {
+    text-align: center;
+    font-size: 1.9rem;
+    color: var(--primary-dark);
+    margin-bottom: 6px;
+}
+
+/* ==========================================================================
+   26. RESPONSIVE - BLOG CARDS GRID
    ========================================================================== */
 @media (max-width: 1024px) {
     .blog-posts-grid {
