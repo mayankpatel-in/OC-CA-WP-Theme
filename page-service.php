@@ -116,13 +116,15 @@ while ( have_posts() ) :
 
         <!-- LEFT: article content from the WordPress page editor -->
         <article class="content-column">
-            <?php the_content(); ?>
-            <?php
-            wp_link_pages( array(
-                'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'oc-ca-theme' ),
-                'after'  => '</div>',
-            ) );
-            ?>
+            <div class="blog-content page-content">
+                <?php the_content(); ?>
+                <?php
+                wp_link_pages( array(
+                    'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'oc-ca-theme' ),
+                    'after'  => '</div>',
+                ) );
+                ?>
+            </div>
         </article>
 
         <!-- RIGHT: sticky sidebar -->
