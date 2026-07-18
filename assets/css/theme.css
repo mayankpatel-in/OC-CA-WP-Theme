@@ -2716,7 +2716,7 @@ img {
     display: grid;
     grid-template-columns: 1.4fr 0.6fr;
     gap: 40px;
-    align-items: start;
+    align-items: stretch;
 }
 
 .content-column {
