@@ -48,9 +48,6 @@ get_header();
                     ) );
                     ?>
                 </div>
-
-                <!-- Reviewed By -->
-                <?php get_template_part( 'template-parts/reviewed-by' ); ?>
                 <?php
             endwhile;
             ?>
@@ -63,5 +60,12 @@ get_header();
 
     </div>
 </main>
+
+<!-- REVIEWED BY (special section) -->
+<section class="reviewed-by-section">
+    <div class="container">
+        <?php get_template_part( 'template-parts/reviewed-by' ); ?>
+    </div>
+</section>
 
 <?php get_footer(); ?>

@@ -125,9 +125,6 @@ while ( have_posts() ) :
                 ) );
                 ?>
             </div>
-
-            <!-- Reviewed By -->
-            <?php get_template_part( 'template-parts/reviewed-by' ); ?>
         </article>
 
         <!-- RIGHT: sticky sidebar -->
@@ -164,6 +161,13 @@ while ( have_posts() ) :
 
     </div>
 </main>
+
+<!-- REVIEWED BY (special section) -->
+<section class="reviewed-by-section">
+    <div class="container">
+        <?php get_template_part( 'template-parts/reviewed-by' ); ?>
+    </div>
+</section>
 
 <?php
 endwhile;

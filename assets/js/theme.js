@@ -562,24 +562,4 @@ document.addEventListener('DOMContentLoaded', () => {
             newsletterSuccess.style.display = 'block';
         });
     }
-
-    /* ==========================================================================
-       10. RELATED POSTS SLIDER
-       ========================================================================== */
-    document.querySelectorAll('.related-posts-wrapper').forEach((wrapper) => {
-        const track = wrapper.querySelector('.related-posts-track-container');
-        const prevBtn = wrapper.querySelector('.related-posts-prev');
-        const nextBtn = wrapper.querySelector('.related-posts-next');
-        if (!track) return;
-
-        const scrollByCard = (direction) => {
-            const card = track.querySelector('.related-post-card');
-            const gap = 22;
-            const distance = card ? (card.offsetWidth + gap) * direction : 280 * direction;
-            track.scrollBy({ left: distance, behavior: 'smooth' });
-        };
-
-        if (nextBtn) nextBtn.addEventListener('click', () => scrollByCard(1));
-        if (prevBtn) prevBtn.addEventListener('click', () => scrollByCard(-1));
-    });
 });

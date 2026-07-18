@@ -69,12 +69,6 @@ get_header();
             </div>
             <?php endif; ?>
 
-            <!-- Reviewed By -->
-            <?php get_template_part( 'template-parts/reviewed-by' ); ?>
-
-            <!-- Related Posts -->
-            <?php get_template_part( 'template-parts/related-posts' ); ?>
-
             <!-- Post Navigation -->
             <div class="post-navigation" style="margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--neutral-light); display: flex; gap: 20px; justify-content: space-between; flex-wrap: wrap;">
                 <?php
@@ -110,6 +104,20 @@ get_header();
 
     </div>
 </main>
+
+<!-- REVIEWED BY (special section) -->
+<section class="reviewed-by-section">
+    <div class="container">
+        <?php get_template_part( 'template-parts/reviewed-by' ); ?>
+    </div>
+</section>
+
+<!-- EXPLORE MORE (related posts, plain cards) -->
+<section class="explore-more-section">
+    <div class="container">
+        <?php get_template_part( 'template-parts/explore-more' ); ?>
+    </div>
+</section>
 
 <?php endwhile; ?>
 

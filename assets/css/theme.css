@@ -3592,23 +3592,26 @@ img {
 }
 
 /* ==========================================================================
-   26. REVIEWED BY AUTHOR BOX
+   26. REVIEWED BY — SPECIAL SECTION (full-width, own card design)
    ========================================================================== */
+.reviewed-by-section {
+    padding: 60px 0;
+}
+
 .reviewed-by-box {
     display: flex;
-    gap: 30px;
-    align-items: flex-start;
+    gap: 40px;
+    align-items: center;
     background-color: var(--neutral-bg);
     border: 1px solid rgba(0,0,0,0.04);
     border-radius: var(--border-radius-lg);
-    padding: 35px;
-    margin-top: 45px;
+    padding: 45px 50px;
 }
 
 .reviewed-by-avatar {
     flex-shrink: 0;
-    width: 110px;
-    height: 110px;
+    width: 130px;
+    height: 130px;
     border-radius: 50%;
     overflow: hidden;
     box-shadow: var(--shadow-sm);
@@ -3628,23 +3631,23 @@ img {
 
 .reviewed-by-label {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: var(--neutral-medium);
-    margin-bottom: 6px;
+    color: var(--primary);
+    margin-bottom: 8px;
 }
 
 .reviewed-by-name {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     color: var(--neutral-darkest);
-    margin-bottom: 14px;
+    margin-bottom: 16px;
 }
 
 .reviewed-by-content p {
-    font-size: 0.98rem;
-    line-height: 1.75;
+    font-size: 1rem;
+    line-height: 1.8;
     color: var(--neutral-dark);
     margin-bottom: 14px;
 }
@@ -3653,12 +3656,12 @@ img {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border-radius: 6px;
     background-color: var(--neutral-darkest);
     color: var(--white);
-    font-size: 0.95rem;
+    font-size: 1rem;
     transition: var(--transition-fast);
 }
 
@@ -3667,12 +3670,17 @@ img {
     color: var(--white);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .reviewed-by-box {
         flex-direction: column;
         align-items: center;
         text-align: center;
-        padding: 28px 22px;
+        padding: 35px 25px;
+    }
+
+    .reviewed-by-avatar {
+        width: 110px;
+        height: 110px;
     }
 
     .reviewed-by-social {
@@ -3681,63 +3689,31 @@ img {
 }
 
 /* ==========================================================================
-   27. RELATED POSTS SLIDER
+   27. EXPLORE MORE — PLAIN RELATED POST CARDS
    ========================================================================== */
-.related-posts-section {
-    margin-top: 45px;
+.explore-more-section {
+    padding: 10px 0 70px;
 }
 
-.related-posts-heading {
-    font-size: 1.5rem;
+.explore-more-heading {
+    font-size: 1.7rem;
     color: var(--neutral-darkest);
-    margin-bottom: 22px;
+    margin-bottom: 30px;
+    text-align: center;
 }
 
-.related-posts-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.explore-more-grid {
+    grid-template-columns: repeat(4, 1fr);
 }
 
-.related-posts-track-container {
-    flex: 1;
-    min-width: 0;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-}
-
-.related-posts-track-container::-webkit-scrollbar {
-    display: none;
-}
-
-.related-posts-track {
-    display: flex;
-    gap: 22px;
-}
-
-.related-post-card {
-    scroll-snap-align: start;
-    flex: 0 0 260px;
-    width: 260px;
-}
-
-.related-posts-prev,
-.related-posts-next {
-    width: 42px;
-    height: 42px;
-    font-size: 0.9rem;
+@media (max-width: 1024px) {
+    .explore-more-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 640px) {
-    .related-post-card {
-        flex-basis: 220px;
-        width: 220px;
-    }
-
-    .related-posts-prev,
-    .related-posts-next {
-        display: none;
+    .explore-more-grid {
+        grid-template-columns: 1fr;
     }
 }
