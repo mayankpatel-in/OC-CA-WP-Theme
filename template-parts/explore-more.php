@@ -56,7 +56,6 @@ if ( ! $oc_ca_related_query->have_posts() ) {
                 <h3 class="blog-card-title">
                     <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                 </h3>
-                <p class="blog-card-excerpt"><?php the_excerpt(); ?></p>
                 <a href="<?php the_permalink(); ?>" class="btn btn-primary btn-sm">
                     <?php esc_html_e( 'Read More', 'oc-ca-theme' ); ?> <i class="fa-solid fa-arrow-right"></i>
                 </a>
