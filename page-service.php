@@ -125,6 +125,9 @@ while ( have_posts() ) :
                 ) );
                 ?>
             </div>
+
+            <!-- Reviewed By -->
+            <?php get_template_part( 'template-parts/reviewed-by' ); ?>
         </article>
 
         <!-- RIGHT: sticky sidebar -->

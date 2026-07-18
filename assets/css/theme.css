@@ -3590,3 +3590,154 @@ img {
         font-size: 1.8rem;
     }
 }
+
+/* ==========================================================================
+   26. REVIEWED BY AUTHOR BOX
+   ========================================================================== */
+.reviewed-by-box {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    background-color: var(--neutral-bg);
+    border: 1px solid rgba(0,0,0,0.04);
+    border-radius: var(--border-radius-lg);
+    padding: 35px;
+    margin-top: 45px;
+}
+
+.reviewed-by-avatar {
+    flex-shrink: 0;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.reviewed-by-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.reviewed-by-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.reviewed-by-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--neutral-medium);
+    margin-bottom: 6px;
+}
+
+.reviewed-by-name {
+    font-size: 1.5rem;
+    color: var(--neutral-darkest);
+    margin-bottom: 14px;
+}
+
+.reviewed-by-content p {
+    font-size: 0.98rem;
+    line-height: 1.75;
+    color: var(--neutral-dark);
+    margin-bottom: 14px;
+}
+
+.reviewed-by-social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background-color: var(--neutral-darkest);
+    color: var(--white);
+    font-size: 0.95rem;
+    transition: var(--transition-fast);
+}
+
+.reviewed-by-social:hover {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+@media (max-width: 640px) {
+    .reviewed-by-box {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 28px 22px;
+    }
+
+    .reviewed-by-social {
+        margin: 0 auto;
+    }
+}
+
+/* ==========================================================================
+   27. RELATED POSTS SLIDER
+   ========================================================================== */
+.related-posts-section {
+    margin-top: 45px;
+}
+
+.related-posts-heading {
+    font-size: 1.5rem;
+    color: var(--neutral-darkest);
+    margin-bottom: 22px;
+}
+
+.related-posts-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.related-posts-track-container {
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+
+.related-posts-track-container::-webkit-scrollbar {
+    display: none;
+}
+
+.related-posts-track {
+    display: flex;
+    gap: 22px;
+}
+
+.related-post-card {
+    scroll-snap-align: start;
+    flex: 0 0 260px;
+    width: 260px;
+}
+
+.related-posts-prev,
+.related-posts-next {
+    width: 42px;
+    height: 42px;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+    .related-post-card {
+        flex-basis: 220px;
+        width: 220px;
+    }
+
+    .related-posts-prev,
+    .related-posts-next {
+        display: none;
+    }
+}

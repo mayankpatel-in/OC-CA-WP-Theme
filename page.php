@@ -48,6 +48,9 @@ get_header();
                     ) );
                     ?>
                 </div>
+
+                <!-- Reviewed By -->
+                <?php get_template_part( 'template-parts/reviewed-by' ); ?>
                 <?php
             endwhile;
             ?>

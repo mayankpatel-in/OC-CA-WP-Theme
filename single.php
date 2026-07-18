@@ -69,6 +69,12 @@ get_header();
             </div>
             <?php endif; ?>
 
+            <!-- Reviewed By -->
+            <?php get_template_part( 'template-parts/reviewed-by' ); ?>
+
+            <!-- Related Posts -->
+            <?php get_template_part( 'template-parts/related-posts' ); ?>
+
             <!-- Post Navigation -->
             <div class="post-navigation" style="margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--neutral-light); display: flex; gap: 20px; justify-content: space-between; flex-wrap: wrap;">
                 <?php
