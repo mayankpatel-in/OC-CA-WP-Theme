@@ -3794,3 +3794,263 @@ img {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==========================================================================
+   29. GUTENBERG BLOCK STYLES (editor output on all posts & pages)
+   Scoped to .blog-content, which wraps the_content() in every template.
+   ========================================================================== */
+
+/* ---- Details / Accordion block ---- */
+.blog-content details {
+    background-color: var(--white);
+    border: 1.5px solid var(--neutral-light);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: var(--transition-fast);
+}
+
+.blog-content details[open] {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.blog-content details > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 16px 20px;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--neutral-darkest);
+    list-style: none;
+    transition: var(--transition-fast);
+}
+
+.blog-content details > summary::-webkit-details-marker {
+    display: none;
+}
+
+.blog-content details > summary::after {
+    content: '\f078'; /* chevron-down */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.8rem;
+    color: var(--primary);
+    flex-shrink: 0;
+    transition: transform var(--transition-fast);
+}
+
+.blog-content details[open] > summary {
+    color: var(--primary);
+    border-bottom: 1px solid var(--neutral-bg);
+}
+
+.blog-content details[open] > summary::after {
+    transform: rotate(180deg);
+}
+
+.blog-content details > summary:hover {
+    background-color: var(--neutral-bg);
+}
+
+.blog-content details > *:not(summary) {
+    padding: 0 20px;
+}
+
+.blog-content details > *:not(summary):first-of-type {
+    padding-top: 15px;
+}
+
+.blog-content details > *:not(summary):last-child {
+    padding-bottom: 18px;
+    margin-bottom: 0;
+}
+
+/* ---- Table block ---- */
+.blog-content .wp-block-table {
+    margin: 0 0 25px;
+    overflow-x: auto;
+}
+
+.blog-content table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.blog-content table th,
+.blog-content table td {
+    border: 1px solid var(--neutral-light);
+    padding: 12px 15px;
+    text-align: left;
+    line-height: 1.6;
+}
+
+.blog-content table th {
+    background-color: var(--primary-light);
+    color: var(--neutral-darkest);
+    font-family: var(--font-display);
+    font-weight: 600;
+}
+
+.blog-content table tbody tr:nth-child(even) {
+    background-color: var(--neutral-bg);
+}
+
+.blog-content .wp-block-table figcaption {
+    margin-top: 8px;
+}
+
+/* ---- Quote blocks ---- */
+.blog-content blockquote {
+    background-color: var(--neutral-bg);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+    padding: 20px 25px;
+    margin: 0 0 25px;
+}
+
+.blog-content blockquote p {
+    font-style: italic;
+    color: var(--neutral-dark);
+    margin-bottom: 8px;
+}
+
+.blog-content blockquote p:last-of-type {
+    margin-bottom: 0;
+}
+
+.blog-content blockquote cite {
+    display: block;
+    margin-top: 10px;
+    font-style: normal;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--neutral-medium);
+}
+
+/* ---- Code / preformatted blocks ---- */
+.blog-content code {
+    background-color: var(--neutral-bg);
+    border: 1px solid var(--neutral-light);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 0.88em;
+    color: var(--primary-dark);
+}
+
+.blog-content pre,
+.blog-content .wp-block-code {
+    background-color: var(--neutral-darkest);
+    color: #e2e8f0;
+    border-radius: var(--border-radius-sm);
+    padding: 20px 24px;
+    margin-bottom: 25px;
+    overflow-x: auto;
+    font-size: 0.9rem;
+    line-height: 1.65;
+}
+
+.blog-content pre code,
+.blog-content .wp-block-code code {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+}
+
+/* ---- Button block ---- */
+.blog-content .wp-block-button__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: var(--border-radius-sm);
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+.blog-content .wp-block-button__link:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.blog-content .is-style-outline .wp-block-button__link {
+    background: transparent;
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+}
+
+.blog-content .is-style-outline .wp-block-button__link:hover {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+/* ---- Separator block ---- */
+.blog-content .wp-block-separator,
+.blog-content hr {
+    border: 0;
+    border-top: 1.5px solid var(--neutral-light);
+    margin: 35px auto;
+}
+
+.blog-content .wp-block-separator.is-style-wide {
+    width: 100%;
+}
+
+.blog-content .wp-block-separator.is-style-dots {
+    border: 0;
+    text-align: center;
+}
+
+.blog-content .wp-block-separator.is-style-dots::before {
+    content: '···';
+    color: var(--neutral-medium);
+    font-size: 1.6rem;
+    letter-spacing: 1.2em;
+    padding-left: 1.2em;
+}
+
+/* ---- Images & captions ---- */
+.blog-content .wp-block-image {
+    margin: 0 0 25px;
+}
+
+.blog-content .wp-block-image img {
+    border-radius: var(--border-radius-sm);
+}
+
+.blog-content figcaption,
+.blog-content .wp-element-caption {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--neutral-medium);
+    margin-top: 10px;
+    line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+    .blog-content details > summary {
+        padding: 14px 16px;
+        font-size: 0.95rem;
+    }
+
+    .blog-content table th,
+    .blog-content table td {
+        padding: 10px 12px;
+        font-size: 0.88rem;
+    }
+}
