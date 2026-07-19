@@ -530,6 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupFormSubmission('modalQuoteForm', 'modalSuccess');
     setupFormSubmission('subpageHeroQuoteForm', 'subpageHeroSuccess');
     setupFormSubmission('sidebarConsultForm', 'sidebarConsultSuccess');
+    setupFormSubmission('contactPageForm', 'contactPageSuccess');
 
     /* ==========================================================================
        9. TEAM SECTION — TAB SWITCHING
