@@ -282,10 +282,17 @@
             $pfx  = 'home_team_' . $n . '_';
             $name = trim( get_theme_mod( $pfx . 'name', '' ) );
             if ( '' === $name ) continue;
+            // Photo: attachment ID (media picker), full URL, or legacy filename
             $img_val = get_theme_mod( $pfx . 'img', '' );
-            $img_url = ( $img_val && ( 0 === strpos( $img_val, 'http' ) || 0 === strpos( $img_val, '/' ) ) )
-                       ? esc_url( $img_val )
-                       : ( $img_val ? esc_url( $img_base . $img_val ) : '' );
+            if ( is_numeric( $img_val ) && (int) $img_val > 0 ) {
+                $img_url = (string) wp_get_attachment_image_url( (int) $img_val, 'large' );
+            } elseif ( $img_val && ( 0 === strpos( $img_val, 'http' ) || 0 === strpos( $img_val, '/' ) ) ) {
+                $img_url = $img_val;
+            } elseif ( $img_val ) {
+                $img_url = $img_base . $img_val;
+            } else {
+                $img_url = '';
+            }
             $skills_raw = get_theme_mod( $pfx . 'skills', '' );
             $skills     = array_values( array_filter( array_map( 'trim', explode( "\n", $skills_raw ) ) ) );
             $team[] = array(
@@ -326,7 +333,7 @@
                     <div class="team-photo-col">
                         <div class="team-photo">
                             <?php if ( $m['img'] ) : ?>
-                                <img src="<?php echo esc_url( $img_base . $m['img'] ); ?>"
+                                <img src="<?php echo esc_url( $m['img'] ); ?>"
                                      alt="<?php echo esc_attr( $m['name'] ); ?>"
                                      loading="lazy">
                             <?php else : ?>

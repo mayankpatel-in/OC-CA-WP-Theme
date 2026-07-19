@@ -285,6 +285,17 @@ class OC_CA_Range_Control extends WP_Customize_Control {
 endif; // class_exists( 'WP_Customize_Control' )
 
 
+/**
+ * Sanitize a team member photo value: attachment ID from the media
+ * picker, or a legacy filename / URL string from older saves.
+ */
+function oc_ca_sanitize_team_img( $value ) {
+    if ( is_numeric( $value ) ) {
+        return absint( $value );
+    }
+    return sanitize_text_field( $value );
+}
+
 function oc_ca_customize_register( $wp_customize ) {
 
     // ── Header logo heights → Site Identity (title_tagline) ──
@@ -534,8 +545,16 @@ function oc_ca_customize_register( $wp_customize ) {
         $wp_customize->add_setting( $pfx . 'role',   array( 'default' => $d['role'],   'sanitize_callback' => 'sanitize_text_field',    'transport' => 'refresh' ) );
         $wp_customize->add_control( $pfx . 'role',   array( 'label' => "{$lbl}: Role / Designation",                 'section' => 'oc_ca_home_team', 'type' => 'text' ) );
 
-        $wp_customize->add_setting( $pfx . 'img',    array( 'default' => $d['img'],    'sanitize_callback' => 'sanitize_text_field',    'transport' => 'refresh' ) );
-        $wp_customize->add_control( $pfx . 'img',    array( 'label' => "{$lbl}: Image filename (e.g. ca-amit.png) or full URL", 'section' => 'oc_ca_home_team', 'type' => 'text' ) );
+        // Photo: media library picker. Stores an attachment ID; legacy saved
+        // values (filename or URL string) are still accepted and rendered.
+        $wp_customize->add_setting( $pfx . 'img',    array( 'default' => $d['img'],    'sanitize_callback' => 'oc_ca_sanitize_team_img',   'transport' => 'refresh' ) );
+        $wp_customize->add_control(
+            new WP_Customize_Media_Control( $wp_customize, $pfx . 'img', array(
+                'label'     => "{$lbl}: Photo",
+                'section'   => 'oc_ca_home_team',
+                'mime_type' => 'image',
+            ) )
+        );
 
         $wp_customize->add_setting( $pfx . 'bio',    array( 'default' => $d['bio'],    'sanitize_callback' => 'sanitize_textarea_field', 'transport' => 'refresh' ) );
         $wp_customize->add_control( $pfx . 'bio',    array( 'label' => "{$lbl}: Bio paragraph",                      'section' => 'oc_ca_home_team', 'type' => 'textarea' ) );
