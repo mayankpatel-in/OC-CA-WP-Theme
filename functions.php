@@ -286,6 +286,60 @@ endif; // class_exists( 'WP_Customize_Control' )
 
 
 /**
+ * Default team member profiles. Shared by the Customizer controls
+ * (as their defaults) and the homepage team section render, so the
+ * team shows even before the Customizer has ever been saved.
+ */
+function oc_ca_home_team_defaults() {
+    return array(
+        1 => array(
+            'name'   => 'CA Amit Bhutada',
+            'role'   => 'Founder & Managing Partner',
+            'img'    => 'ca-amit.png',
+            'bio'    => 'CA Amit Bhutada is the founder of A N Bhutada & Co. With over 10 years of professional experience, he advises Indian and international businesses on company incorporation, taxation, regulatory compliance, and business growth. He specializes in helping startups, SMEs, and overseas investors establish and manage their operations in India.',
+            'skills' => "Private Limited Company Incorporation\nInternational Business Setup In India\nCorporate Compliances\nGST Advisory\nBusiness Advisory for Startups & Growing Businesses",
+        ),
+        2 => array(
+            'name'   => 'CA Ravish Maniyar',
+            'role'   => 'Associate – Audit & Advisory',
+            'img'    => 'ca-ravish.jpeg',
+            'bio'    => 'CA Ravish Maniyar brings over 15 years of experience in audit, assurance, and financial advisory services. He has extensive expertise in conducting statutory, tax, bank, and internal audits across diverse industries while helping organizations strengthen governance and internal controls.',
+            'skills' => "Statutory Audits & Tax Audits\nBank Audits & Government Audits\nInternal Control & Compliance Systems\nRisk Management & Financial Advisory",
+        ),
+        3 => array(
+            'name'   => 'CS, Adv. Priyanka Bajaj',
+            'role'   => 'Company Secretary & Advocate',
+            'img'    => 'cs-priyanka.jpeg',
+            'bio'    => 'CS Priyanka Bajaj has more than 10 years of experience in corporate laws and secretarial compliance. She advises companies on corporate governance, FEMA regulations, business structuring, and legal compliance under the Companies Act.',
+            'skills' => "Corporate Compliances\nFEMA Compliances\nCompany Setup Advisory\nStartup Advisory Services",
+        ),
+        4 => array(
+            'name'   => 'Avinash Sable',
+            'role'   => 'Senior Associate – Compliance',
+            'img'    => 'avinash-sable.jpg',
+            'bio'    => 'Avinash Sable is a Commerce Graduate with over 5 years of experience in accounting, taxation, payroll, and statutory compliance. He serves as a dedicated point of contact for clients, ensuring timely completion of routine compliance requirements.',
+            'skills' => "Accounting\nPayroll Processing\nGST, TDS & Tax Filings\nStartup Advisory Services",
+        ),
+        5 => array(
+            'name'   => 'Yukta Shah',
+            'role'   => 'Associate – Taxation & Audit',
+            'img'    => 'yukta-shah.jpeg',
+            'bio'    => 'Yukta Shah is a Commerce Graduate and CA Final student with over 5 years of practical experience in accounting, audit, and taxation. She supports businesses in maintaining statutory compliance and provides assistance in audit and indirect tax matters.',
+            'skills' => "GST Compliances\nStatutory Auditing\nTax Planning\nIndirect Tax Advisory",
+        ),
+        6 => array(
+            'name'   => 'Prabhanjan Patil',
+            'role'   => 'Associate – Corporate & FEMA',
+            'img'    => 'prabhanjan-patil.jpg',
+            'bio'    => 'Prabhanjan Patil has extensive experience in corporate compliance, company law, and FEMA regulations. He advises Indian companies and foreign investors on regulatory compliance, FDI transactions, and corporate structuring, helping businesses remain compliant with the Companies Act and FEMA regulations.',
+            'skills' => "ESOP Structuring & Compliance\nForeign Direct Investment Compliances\nCorporate Advisory & Secretarial Support\nFEMA Compliances",
+        ),
+        7 => array( 'name' => '', 'role' => '', 'img' => '', 'bio' => '', 'skills' => '' ),
+        8 => array( 'name' => '', 'role' => '', 'img' => '', 'bio' => '', 'skills' => '' ),
+    );
+}
+
+/**
  * Sanitize a team member photo value: attachment ID from the media
  * picker, or a legacy filename / URL string from older saves.
  */
@@ -488,52 +542,7 @@ function oc_ca_customize_register( $wp_customize ) {
         'priority' => 37,
     ) );
 
-    $team_defaults = array(
-        1 => array(
-            'name'   => 'CA Amit Bhutada',
-            'role'   => 'Founder & Managing Partner',
-            'img'    => 'ca-amit.png',
-            'bio'    => 'CA Amit Bhutada is the founder of A N Bhutada & Co. With over 10 years of professional experience, he advises Indian and international businesses on company incorporation, taxation, regulatory compliance, and business growth. He specializes in helping startups, SMEs, and overseas investors establish and manage their operations in India.',
-            'skills' => "Private Limited Company Incorporation\nInternational Business Setup In India\nCorporate Compliances\nGST Advisory\nBusiness Advisory for Startups & Growing Businesses",
-        ),
-        2 => array(
-            'name'   => 'CA Ravish Maniyar',
-            'role'   => 'Associate – Audit & Advisory',
-            'img'    => 'ca-ravish.jpeg',
-            'bio'    => 'CA Ravish Maniyar brings over 15 years of experience in audit, assurance, and financial advisory services. He has extensive expertise in conducting statutory, tax, bank, and internal audits across diverse industries while helping organizations strengthen governance and internal controls.',
-            'skills' => "Statutory Audits & Tax Audits\nBank Audits & Government Audits\nInternal Control & Compliance Systems\nRisk Management & Financial Advisory",
-        ),
-        3 => array(
-            'name'   => 'CS, Adv. Priyanka Bajaj',
-            'role'   => 'Company Secretary & Advocate',
-            'img'    => 'cs-priyanka.jpeg',
-            'bio'    => 'CS Priyanka Bajaj has more than 10 years of experience in corporate laws and secretarial compliance. She advises companies on corporate governance, FEMA regulations, business structuring, and legal compliance under the Companies Act.',
-            'skills' => "Corporate Compliances\nFEMA Compliances\nCompany Setup Advisory\nStartup Advisory Services",
-        ),
-        4 => array(
-            'name'   => 'Avinash Sable',
-            'role'   => 'Senior Associate – Compliance',
-            'img'    => 'avinash-sable.jpg',
-            'bio'    => 'Avinash Sable is a Commerce Graduate with over 5 years of experience in accounting, taxation, payroll, and statutory compliance. He serves as a dedicated point of contact for clients, ensuring timely completion of routine compliance requirements.',
-            'skills' => "Accounting\nPayroll Processing\nGST, TDS & Tax Filings\nStartup Advisory Services",
-        ),
-        5 => array(
-            'name'   => 'Yukta Shah',
-            'role'   => 'Associate – Taxation & Audit',
-            'img'    => 'yukta-shah.jpeg',
-            'bio'    => 'Yukta Shah is a Commerce Graduate and CA Final student with over 5 years of practical experience in accounting, audit, and taxation. She supports businesses in maintaining statutory compliance and provides assistance in audit and indirect tax matters.',
-            'skills' => "GST Compliances\nStatutory Auditing\nTax Planning\nIndirect Tax Advisory",
-        ),
-        6 => array(
-            'name'   => 'Prabhanjan Patil',
-            'role'   => 'Associate – Corporate & FEMA',
-            'img'    => 'prabhanjan-patil.jpg',
-            'bio'    => 'Prabhanjan Patil has extensive experience in corporate compliance, company law, and FEMA regulations. He advises Indian companies and foreign investors on regulatory compliance, FDI transactions, and corporate structuring, helping businesses remain compliant with the Companies Act and FEMA regulations.',
-            'skills' => "ESOP Structuring & Compliance\nForeign Direct Investment Compliances\nCorporate Advisory & Secretarial Support\nFEMA Compliances",
-        ),
-        7 => array( 'name' => '', 'role' => '', 'img' => '', 'bio' => '', 'skills' => '' ),
-        8 => array( 'name' => '', 'role' => '', 'img' => '', 'bio' => '', 'skills' => '' ),
-    );
+    $team_defaults = oc_ca_home_team_defaults();
 
     foreach ( $team_defaults as $n => $d ) {
         $pfx = 'home_team_' . $n . '_';

@@ -278,12 +278,16 @@
         <?php
         $img_base = get_template_directory_uri() . '/assets/img/team/';
         $team     = array();
+        // Same defaults as the Customizer controls, so members render
+        // even before the Customizer has ever been saved.
+        $team_defaults = oc_ca_home_team_defaults();
         for ( $n = 1; $n <= 8; $n++ ) {
             $pfx  = 'home_team_' . $n . '_';
-            $name = trim( get_theme_mod( $pfx . 'name', '' ) );
+            $d    = isset( $team_defaults[ $n ] ) ? $team_defaults[ $n ] : array( 'name' => '', 'role' => '', 'img' => '', 'bio' => '', 'skills' => '' );
+            $name = trim( get_theme_mod( $pfx . 'name', $d['name'] ) );
             if ( '' === $name ) continue;
             // Photo: attachment ID (media picker), full URL, or legacy filename
-            $img_val = get_theme_mod( $pfx . 'img', '' );
+            $img_val = get_theme_mod( $pfx . 'img', $d['img'] );
             if ( is_numeric( $img_val ) && (int) $img_val > 0 ) {
                 $img_url = (string) wp_get_attachment_image_url( (int) $img_val, 'large' );
             } elseif ( $img_val && ( 0 === strpos( $img_val, 'http' ) || 0 === strpos( $img_val, '/' ) ) ) {
@@ -293,14 +297,14 @@
             } else {
                 $img_url = '';
             }
-            $skills_raw = get_theme_mod( $pfx . 'skills', '' );
+            $skills_raw = get_theme_mod( $pfx . 'skills', $d['skills'] );
             $skills     = array_values( array_filter( array_map( 'trim', explode( "\n", $skills_raw ) ) ) );
             $team[] = array(
                 'id'     => 'member-' . $n,
                 'name'   => $name,
-                'role'   => get_theme_mod( $pfx . 'role', '' ),
+                'role'   => get_theme_mod( $pfx . 'role', $d['role'] ),
                 'img'    => $img_url,
-                'bio'    => get_theme_mod( $pfx . 'bio', '' ),
+                'bio'    => get_theme_mod( $pfx . 'bio', $d['bio'] ),
                 'skills' => $skills,
             );
         }
