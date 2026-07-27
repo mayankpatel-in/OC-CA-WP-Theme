@@ -1749,7 +1749,7 @@ img {
    14. FOOTER & NEWSLETTER
    -------------------------------------------------------------------------- */
 .main-footer {
-    background-color: var(--neutral-darkest);
+    background-color: #161b40;
     color: var(--neutral-light);
     padding: 80px 0 0 0;
 }
@@ -2803,7 +2803,7 @@ img {
 }
 
 .cta-side-card {
-    background: linear-gradient(135deg, var(--neutral-darkest) 0%, #1e293b 100%);
+    background: #161b40;
     color: var(--white);
 }
 
