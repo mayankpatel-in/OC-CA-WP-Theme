@@ -10,7 +10,6 @@ get_header();
 
 <section class="subpage-hero">
     <div class="container">
-        <?php oc_ca_breadcrumbs(); ?>
         <div class="subpage-hero-title">
             <h1>Search Results for: <em><?php echo get_search_query(); ?></em></h1>
             <?php get_search_form(); ?>

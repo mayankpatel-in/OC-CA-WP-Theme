@@ -14,7 +14,6 @@ get_header();
 <!-- ARCHIVE HERO BANNER -->
 <section class="subpage-hero">
     <div class="container">
-        <?php oc_ca_breadcrumbs(); ?>
         <div class="subpage-hero-title">
             <?php the_archive_title( '<h1>', '</h1>' ); ?>
             <?php the_archive_description( '<p class="lead">', '</p>' ); ?>

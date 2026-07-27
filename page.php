@@ -15,7 +15,6 @@ get_header();
 <!-- SUBPAGE HERO BANNER -->
 <section class="subpage-hero">
     <div class="container">
-        <?php oc_ca_breadcrumbs(); ?>
         <div class="subpage-hero-title">
             <h1><?php the_title(); ?></h1>
         </div>

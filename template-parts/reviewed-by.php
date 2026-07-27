@@ -7,7 +7,7 @@
  * @package OC_CA_Theme
  */
 
-$oc_ca_reviewer_linkedin = get_theme_mod( 'footer_li_url', '#' );
+$oc_ca_reviewer_linkedin = 'https://in.linkedin.com/in/ca-amit-bhutada-27066849';
 ?>
 <div class="reviewed-by-box">
     <div class="reviewed-by-avatar">

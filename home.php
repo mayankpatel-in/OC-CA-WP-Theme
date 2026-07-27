@@ -14,7 +14,6 @@ get_header();
 <!-- BLOG HERO BANNER -->
 <section class="subpage-hero">
     <div class="container">
-        <?php oc_ca_breadcrumbs(); ?>
         <div class="subpage-hero-title">
             <h1>Latest Insights &amp; Guides</h1>
             <p class="lead">Stay updated on taxation, company registration, GST compliance, and CA best practices.</p>

@@ -1684,6 +1684,11 @@ img {
     margin-bottom: 25px;
 }
 
+.home-seo-section {
+    padding: 80px 0;
+    background-color: var(--white);
+}
+
 .marquee-wrapper {
     overflow: hidden;
     position: relative;

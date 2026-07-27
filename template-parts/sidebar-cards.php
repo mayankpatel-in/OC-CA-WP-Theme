@@ -40,7 +40,7 @@
     <div class="sidebar-card why-card">
         <h4><i class="fa-solid fa-shield-halved" style="color:var(--primary);margin-right:8px;"></i> Why A N Bhutada &amp; Co?</h4>
         <ul class="why-list">
-            <li><i class="fa-solid fa-check-circle"></i> 15+ Years of Expertise</li>
+            <li><i class="fa-solid fa-check-circle"></i> 10+ Years of Expertise</li>
             <li><i class="fa-solid fa-check-circle"></i> 1000+ Satisfied Clients</li>
             <li><i class="fa-solid fa-check-circle"></i> 50+ Services Under One Roof</li>
             <li><i class="fa-solid fa-check-circle"></i> 100% Confidentiality</li>

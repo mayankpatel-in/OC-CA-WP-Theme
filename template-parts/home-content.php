@@ -103,7 +103,7 @@
         <div class="stat-card">
             <div class="stat-icon"><i class="fa-solid fa-award"></i></div>
             <div class="stat-number-box">
-                <span class="stat-number" data-target="15">0</span><span class="stat-plus">+</span>
+                <span class="stat-number" data-target="10">0</span><span class="stat-plus">+</span>
             </div>
             <p class="stat-label">Years of Excellence</p>
         </div>
@@ -185,7 +185,7 @@
                             <li><i class="fa-solid fa-check"></i> Easier access to bank loans and VC funding</li>
                             <li><i class="fa-solid fa-check"></i> Smooth digital shares transfer</li>
                         </ul>
-                        <button class="btn btn-primary quick-quote-service" data-service="Company Registration">Get a Custom Quote</button>
+                        <button class="btn btn-primary quick-quote-service" data-service="Company Registration">Book Free Consultation</button>
                     </div>
                     <div class="slider-image" style="background: url('https://www.anbca.com/wp-content/uploads/2023/02/company.png') center/cover no-repeat; border-radius: 20px;"></div>
                 </div>
@@ -203,7 +203,7 @@
                             <li><i class="fa-solid fa-check"></i> Legally verified Input Tax Credit claims</li>
                             <li><i class="fa-solid fa-check"></i> Standardized monthly return compliance</li>
                         </ul>
-                        <button class="btn btn-primary quick-quote-service" data-service="GST Registration">Get a Custom Quote</button>
+                        <button class="btn btn-primary quick-quote-service" data-service="GST Registration">Book Free Consultation</button>
                     </div>
                     <div class="slider-image" style="background: url('https://www.anbca.com/wp-content/uploads/slider/cache/8d1e5abd24d0325a8eab99cb151b3f68/register-company-cyprus.jpg') center/cover no-repeat; border-radius: 20px;"></div>
                 </div>
@@ -221,7 +221,7 @@
                             <li><i class="fa-solid fa-check"></i> Enhanced financial report credibility</li>
                             <li><i class="fa-solid fa-check"></i> Internal financial control auditing</li>
                         </ul>
-                        <button class="btn btn-primary quick-quote-service" data-service="Tax Audit">Get a Custom Quote</button>
+                        <button class="btn btn-primary quick-quote-service" data-service="Tax Audit">Book Free Consultation</button>
                     </div>
                     <div class="slider-image" style="background: url('https://www.anbca.com/wp-content/uploads/slider/cache/d84ff7241801e8012efa1534316f221f/auditing2.jpg') center/cover no-repeat; border-radius: 20px;"></div>
                 </div>
@@ -594,6 +594,21 @@
                 <div class="marquee-slide"><img src="https://www.anbca.com/wp-content/uploads/2019/01/quickbooks.jpg" alt="QuickBooks"></div>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- HOME SEO CONTENT SECTION -->
+<section class="home-seo-section">
+    <div class="container blog-content">
+        <h2>Chartered Accountant In Pune, India</h2>
+        <p>A. N. Bhutada &amp; Co. is trusted and versatile Top Best Chartered Accountant In Pune India. The firm have aim of providing Best services Auditing and Taxation, company registration, Income Tax Consultant, Outsourced Accounting, Outsourced Payroll Services, NRI Taxation, secretarial services, GST filing, GST Consultancy, Direct &amp; Indirect Taxation Service, DGFT Services, STPI Consultant, Corporate Finance Advisory, central excise, Import Export Tax Benefits. The firm is having professionals who are experienced and committed to add value to business of each client.</p>
+        <p>The focus of firm is providing solutions to challenging problems of clients with wide range of services. We value our relationship with clients and make tailor made services to our clients. He aims to provide right advice for your business need. He help you in managing every aspect to business from registration part to compliance part to compliance&rsquo;s by tax planning, investment planning. Every client is important to us and we ensure to achieve the highest standards of service to our clients. Each member of firm is committed to be independent, as it helps us to service our client&rsquo;s needs in the most effective manner.</p>
+
+        <h3>Why You need Hire CA Firm in Pune ?</h3>
+        <p>Pune is second growing city in Maharashtra after Mumbai. Pune is city of education as well as business. Most of IT companies prefer to setup business for hiring most talented resources to manage and operate business. Pune also have business friendly MIDC which help manufacturing companies to setup operations. Such business need Best CA firm in Pune who can help to choose right business model such as LLP / Private Limited etc. They also need solution for accounting service, GST Filing, payroll process, auditing, advisory etc. Finding all theses services under one proof is always a challenge. However A N Bhutada &amp; CO is Top CA firm in Pune who have knowledge and expertise to cater with all your business need. The firm also have adopted technology changes after Covid pandemic to enable work from home services.</p>
+
+        <h3>Top Chartered Accountant in Pune &ndash; A N Bhutada &amp; CO</h3>
+        <p>Pune have lots of Chartered Accountant firm however our top Chartered Accountant firm have key feature. Association with A N Bhutada &amp; Co ensure you get all services related to business formation, auditing, tax filing &amp; ROC compliances under one office. We allocate one dedicated resource who have experience of accounting and taxation who can help you in payment of taxes, filing of returns, TDS support services. Also with this we sign non disclosure agreement with client, making 100% confidentiality of date of clients. We also provide advisory services for startups firm to quick start business, help in business setup and day today management. We do tax planning client ensuring that they are taking benefit of legal providing ensuring maximum tax saving. Indian tax system confirm so much of complexity and these keeps on changing. It become important for business to ensure they are compliant with tax law. By Hiring top CA firm in Pune you ensure that your company is tax compliant.</p>
     </div>
 </section>
 

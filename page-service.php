@@ -48,7 +48,6 @@ while ( have_posts() ) :
 
         <!-- Left: breadcrumb + H1 + price + subtitle + free bundle -->
         <div class="subpage-hero-text">
-            <?php oc_ca_breadcrumbs(); ?>
 
             <h1><?php the_title(); ?></h1>
 
@@ -84,7 +83,7 @@ while ( have_posts() ) :
         <!-- Right: instant quote form -->
         <div class="subpage-hero-form">
             <div class="form-wrapper">
-                <h3>Get Quote Instantly In A Minute</h3>
+                <h3>Book Free Consultation</h3>
                 <form id="serviceHeroQuoteForm" class="interactive-form">
                     <div class="form-group">
                         <input type="text" name="name" placeholder="Full Name" required>
@@ -152,7 +151,7 @@ while ( have_posts() ) :
                         <li><i class="fa-solid fa-award"></i> Senior CA Advisor Support</li>
                         <li><i class="fa-solid fa-tags"></i> Transparent Pricing</li>
                         <li><i class="fa-solid fa-users"></i> 1000+ Satisfied Clients</li>
-                        <li><i class="fa-solid fa-star"></i> 15+ Years of Expertise</li>
+                        <li><i class="fa-solid fa-star"></i> 10+ Years of Expertise</li>
                     </ul>
                 </div>
 
