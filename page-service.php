@@ -95,6 +95,9 @@ while ( have_posts() ) :
                         <input type="email" name="email" placeholder="Email Address" required>
                     </div>
                     <button type="submit" class="btn btn-accent btn-full btn-get-started">GET STARTED</button>
+                    <div class="form-zoho-badge">
+                        <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/img/zoho-authorized-partner.png" alt="Zoho Authorized Partner" loading="lazy">
+                    </div>
                 </form>
                 <div class="form-success" id="serviceHeroSuccess" style="display:none; text-align:center; padding:20px 0;">
                     <i class="fa-solid fa-circle-check" style="font-size:2.5rem;color:var(--success);margin-bottom:0.7rem;display:block;"></i>

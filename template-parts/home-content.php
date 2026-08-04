@@ -65,6 +65,9 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-accent btn-full">Book Consultation <i class="fa-solid fa-arrow-right-long"></i></button>
+                    <div class="form-zoho-badge">
+                        <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/img/zoho-authorized-partner.png" alt="Zoho Authorized Partner" loading="lazy">
+                    </div>
                 </form>
                 <div class="form-success" id="heroFormSuccess" style="display:none; text-align:center;">
                     <i class="fa-solid fa-circle-check"></i>
@@ -401,6 +404,9 @@
                         <input type="email" id="cbEmail" name="email" placeholder="Email Address" required>
                     </div>
                     <button type="submit" class="btn btn-accent btn-full">Send Callback Request <i class="fa-solid fa-paper-plane"></i></button>
+                    <div class="form-zoho-badge">
+                        <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/img/zoho-authorized-partner.png" alt="Zoho Authorized Partner" loading="lazy">
+                    </div>
                 </form>
                 <div class="form-success" id="cbSuccess" style="display:none; text-align:center;">
                     <i class="fa-solid fa-circle-check"></i>

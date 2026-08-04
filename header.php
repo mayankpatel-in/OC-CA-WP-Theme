@@ -26,12 +26,11 @@
         <div class="contact-info">
             <span><i class="fa-solid fa-phone"></i> <a href="tel:+918055566789">+91 80555 66789</a></span>
             <span><i class="fa-solid fa-envelope"></i> <a href="mailto:office@anbca.com">office@anbca.com</a></span>
-            <span><i class="fa-solid fa-clock"></i> Mon - Sat: 10 AM - 8 PM</span>
+            <span><i class="fa-solid fa-clock"></i> Mon - Sat: 11 AM - 7:30 PM</span>
         </div>
         <div class="social-links">
-            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
-            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="https://www.facebook.com/anbcapune/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="https://www.linkedin.com/company/a-n-bhutada-co" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
             <a href="https://wa.me/918055566789" class="wa-top" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i> Chat Now</a>
         </div>
     </div>

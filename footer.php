@@ -15,7 +15,7 @@
 
 // Customizer values — Footer Col 1
 $footer_desc    = get_theme_mod( 'footer_company_desc', 'A trusted and versatile Chartered Accountant firm in Pune, India. Committed to rendering top professional services with independence, integrity, and efficiency.' );
-$footer_address = get_theme_mod( 'footer_address', 'G 20 Ashoka Mall, Bund Garden Road, Pune - 411001' );
+$footer_address = get_theme_mod( 'footer_address', 'Office No. 404 to 407, 5th Floor, Lotus Court, Above Kaka Halwai, Pune Satara Road (near Panchami Hotel), Swargate, Pune - 411009' );
 $footer_phone   = get_theme_mod( 'footer_phone', '+91 80555 66789' );
 $footer_email   = get_theme_mod( 'footer_email', 'office@anbca.com' );
 $footer_fb      = get_theme_mod( 'footer_fb_url', '#' );

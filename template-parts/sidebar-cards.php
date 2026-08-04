@@ -28,6 +28,9 @@
             <button type="submit" class="btn btn-primary btn-full">
                 Request Callback <i class="fa-solid fa-arrow-right"></i>
             </button>
+            <div class="form-zoho-badge">
+                <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/img/zoho-authorized-partner.png" alt="Zoho Authorized Partner" loading="lazy">
+            </div>
         </form>
         <div class="form-success" id="sidebarConsultSuccess" style="display:none; text-align:center; padding:20px 0;">
             <i class="fa-solid fa-circle-check" style="font-size:2.5rem;color:var(--success);margin-bottom:0.7rem;display:block;"></i>

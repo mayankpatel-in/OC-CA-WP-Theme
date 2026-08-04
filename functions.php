@@ -449,7 +449,7 @@ function oc_ca_customize_register( $wp_customize ) {
         ),
         'footer_address' => array(
             'label'   => __( 'Address', 'oc-ca-theme' ),
-            'default' => 'G 20 Ashoka Mall, Bund Garden Road, Pune - 411001',
+            'default' => 'Office No. 404 to 407, 5th Floor, Lotus Court, Above Kaka Halwai, Pune Satara Road (near Panchami Hotel), Swargate, Pune - 411009',
             'type'    => 'text',
         ),
         'footer_phone' => array(

@@ -31,6 +31,9 @@
                 <input type="tel" id="modalPhone" name="phone" placeholder="Enter phone number" required>
             </div>
             <button type="submit" class="btn btn-primary btn-full">Submit Inquiry <i class="fa-solid fa-paper-plane"></i></button>
+            <div class="form-zoho-badge">
+                <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/img/zoho-authorized-partner.png" alt="Zoho Authorized Partner" loading="lazy">
+            </div>
         </form>
         <div class="form-success" id="modalSuccess" style="display:none; text-align:center; padding: 30px 0;">
             <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></i>

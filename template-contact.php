@@ -15,7 +15,7 @@ while ( have_posts() ) :
     the_post();
 
     // Contact info (from Customizer, same as footer)
-    $address   = get_theme_mod( 'footer_address',   'G 20 Ashoka Mall, Bund Garden Road, Pune - 411001' );
+    $address   = get_theme_mod( 'footer_address',   'Office No. 404 to 407, 5th Floor, Lotus Court, Above Kaka Halwai, Pune Satara Road (near Panchami Hotel), Swargate, Pune - 411009' );
     $phone     = get_theme_mod( 'footer_phone',     '+91 80555 66789' );
     $email     = get_theme_mod( 'footer_email',     'office@anbca.com' );
     $wa_num    = get_theme_mod( 'footer_wa_number', '918055566789' );
@@ -109,6 +109,9 @@ while ( have_posts() ) :
                         <textarea id="contactMessage" name="message" rows="5" placeholder="Tell us briefly what you need help with" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+                    <div class="form-zoho-badge">
+                        <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/img/zoho-authorized-partner.png" alt="Zoho Authorized Partner" loading="lazy">
+                    </div>
                 </form>
 
                 <div class="form-success" id="contactPageSuccess" style="display:none; text-align:center; padding:30px 0;">
