@@ -20,9 +20,10 @@ while ( have_posts() ) :
     $pid = get_the_ID();
 
     // ── Hero meta fields ──────────────────────────────────────────────
-    $price    = get_post_meta( $pid, '_service_price',      true );
-    $subtitle = get_post_meta( $pid, '_service_subtitle',   true );
-    $free_ttl = get_post_meta( $pid, '_service_free_title', true ) ?: 'Also Get Absolutely Free';
+    $hero_style = get_post_meta( $pid, '_service_hero_style',   true ) ?: 'hero1';
+    $price      = get_post_meta( $pid, '_service_price',        true );
+    $subtitle   = get_post_meta( $pid, '_service_subtitle',     true );
+    $free_ttl   = get_post_meta( $pid, '_service_free_title',   true ) ?: 'Also Get Absolutely Free';
 
     $free_items = array();
     $default_icons  = array( 'fa-address-card', 'fa-file-invoice-dollar', 'fa-user-tie', 'fa-cloud' );
@@ -31,6 +32,19 @@ while ( have_posts() ) :
         $icon  = get_post_meta( $pid, "_service_free_{$i}_icon",  true ) ?: $default_icons[ $i - 1 ];
         $label = get_post_meta( $pid, "_service_free_{$i}_label", true ) ?: $default_labels[ $i - 1 ];
         $free_items[] = array( 'icon' => $icon, 'label' => $label );
+    }
+
+    // ── Hero 2 fields (Title + Description + Checklist variant) ───────
+    $hero2_desc   = get_post_meta( $pid, '_service_hero2_desc', true );
+    $hero2_points = array();
+    $hero2_raw    = get_post_meta( $pid, '_service_hero2_points', true );
+    if ( $hero2_raw ) {
+        foreach ( preg_split( '/\r\n|\r|\n/', $hero2_raw ) as $line ) {
+            $line = trim( $line );
+            if ( '' !== $line ) {
+                $hero2_points[] = $line;
+            }
+        }
     }
 
     // ── Contact info (from Customizer, same as footer) ────────────────
@@ -46,38 +60,56 @@ while ( have_posts() ) :
 <section class="subpage-hero">
     <div class="container hero-subpage-grid">
 
-        <!-- Left: breadcrumb + H1 + price + subtitle + free bundle -->
+        <!-- Left: breadcrumb + H1 + Hero 1 (price/subtitle/free bundle) OR Hero 2 (description/checklist) -->
         <div class="subpage-hero-text">
 
             <h1><?php the_title(); ?></h1>
 
-            <?php if ( $price ) : ?>
-                <div class="price-tag"><?php echo esc_html( $price ); ?></div>
-            <?php endif; ?>
+            <?php if ( 'hero2' === $hero_style ) : ?>
 
-            <?php if ( $subtitle ) : ?>
-                <p class="subpage-hero-sub"><?php echo esc_html( $subtitle ); ?></p>
-            <?php endif; ?>
+                <?php if ( $hero2_desc ) : ?>
+                    <p class="hero2-description"><?php echo esc_html( $hero2_desc ); ?></p>
+                <?php endif; ?>
 
-            <?php if ( $price || $subtitle ) : ?>
-                <div class="hero-divider"></div>
-            <?php endif; ?>
-
-            <div class="free-bundle-container">
-                <span class="free-badge">FREE</span>
-                <h3 class="free-title"><?php echo esc_html( $free_ttl ); ?></h3>
-                <div class="free-items-grid">
-                    <?php foreach ( $free_items as $item ) :
-                        $icon  = sanitize_html_class( $item['icon'] );
-                        $label = esc_html( $item['label'] );
-                    ?>
-                    <div class="free-item">
-                        <div class="free-icon"><i class="fa-solid <?php echo esc_attr( $icon ); ?>"></i></div>
-                        <span class="free-label"><?php echo $label; ?></span>
-                    </div>
+                <?php if ( $hero2_points ) : ?>
+                <ul class="hero2-points">
+                    <?php foreach ( $hero2_points as $point ) : ?>
+                    <li><i class="fa-solid fa-check"></i> <span><?php echo esc_html( $point ); ?></span></li>
                     <?php endforeach; ?>
+                </ul>
+                <?php endif; ?>
+
+            <?php else : ?>
+
+                <?php if ( $price ) : ?>
+                    <div class="price-tag"><?php echo esc_html( $price ); ?></div>
+                <?php endif; ?>
+
+                <?php if ( $subtitle ) : ?>
+                    <p class="subpage-hero-sub"><?php echo esc_html( $subtitle ); ?></p>
+                <?php endif; ?>
+
+                <?php if ( $price || $subtitle ) : ?>
+                    <div class="hero-divider"></div>
+                <?php endif; ?>
+
+                <div class="free-bundle-container">
+                    <span class="free-badge">FREE</span>
+                    <h3 class="free-title"><?php echo esc_html( $free_ttl ); ?></h3>
+                    <div class="free-items-grid">
+                        <?php foreach ( $free_items as $item ) :
+                            $icon  = sanitize_html_class( $item['icon'] );
+                            $label = esc_html( $item['label'] );
+                        ?>
+                        <div class="free-item">
+                            <div class="free-icon"><i class="fa-solid <?php echo esc_attr( $icon ); ?>"></i></div>
+                            <span class="free-label"><?php echo $label; ?></span>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
-            </div>
+
+            <?php endif; ?>
         </div>
 
         <!-- Right: instant quote form -->

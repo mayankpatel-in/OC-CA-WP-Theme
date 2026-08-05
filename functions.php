@@ -702,10 +702,13 @@ add_action( 'customize_preview_init', 'oc_ca_customize_preview_enqueue' );
 //
 // Adds a "Service Hero Settings" panel inside the Page editor for any page
 // using the "Service Page" template (page-service.php). Editors fill in:
-//   • Price Tag text       → _service_price
-//   • Hero Subtitle        → _service_subtitle
-//   • Free Bundle Heading  → _service_free_title
-//   • Free Item 1–4        → _service_free_{n}_icon + _service_free_{n}_label
+//   • Hero Style           → _service_hero_style  ('hero1' | 'hero2')
+//   • Price Tag text       → _service_price               (Hero 1)
+//   • Hero Subtitle        → _service_subtitle             (Hero 1)
+//   • Free Bundle Heading  → _service_free_title           (Hero 1)
+//   • Free Item 1–4        → _service_free_{n}_icon + _service_free_{n}_label (Hero 1)
+//   • Hero 2 Description   → _service_hero2_desc           (Hero 2)
+//   • Hero 2 Checklist     → _service_hero2_points         (Hero 2, one point per line)
 //
 // The main article content (intro, features, tables, FAQs, etc.) is
 // written directly in the page editor content area via the_content().
@@ -725,9 +728,12 @@ add_action( 'add_meta_boxes_page', 'oc_ca_register_service_meta_box' );
 function oc_ca_service_meta_box_html( $post ) {
     wp_nonce_field( 'oc_ca_service_hero_save', 'oc_ca_service_hero_nonce' );
 
-    $price    = get_post_meta( $post->ID, '_service_price',      true );
-    $subtitle = get_post_meta( $post->ID, '_service_subtitle',   true );
-    $free_ttl = get_post_meta( $post->ID, '_service_free_title', true );
+    $hero_style   = get_post_meta( $post->ID, '_service_hero_style',   true ) ?: 'hero1';
+    $price        = get_post_meta( $post->ID, '_service_price',        true );
+    $subtitle     = get_post_meta( $post->ID, '_service_subtitle',     true );
+    $free_ttl     = get_post_meta( $post->ID, '_service_free_title',   true );
+    $hero2_desc   = get_post_meta( $post->ID, '_service_hero2_desc',   true );
+    $hero2_points = get_post_meta( $post->ID, '_service_hero2_points', true );
 
     $default_icons  = array( 'fa-address-card', 'fa-file-invoice-dollar', 'fa-user-tie', 'fa-cloud' );
     $default_labels = array( 'Shop Act', 'Invoice Format', 'Consulting', 'Accounting Software' );
@@ -738,27 +744,63 @@ function oc_ca_service_meta_box_html( $post ) {
     ?>
     <p style="font-size:12px;color:#646970;margin-top:0;">Only active when template is <strong>Service Page</strong>.</p>
 
-    <label style="<?php echo $style_label; ?>">Price Tag</label>
-    <input type="text" name="service_price" value="<?php echo esc_attr( $price ); ?>" style="<?php echo $style_input; ?>" placeholder="@ Rs. 990 All Inclusive">
-
-    <label style="<?php echo $style_label; ?>">Hero Subtitle</label>
-    <input type="text" name="service_subtitle" value="<?php echo esc_attr( $subtitle ); ?>" style="<?php echo $style_input; ?>" placeholder="100% Online Process & CA Services">
-
-    <label style="<?php echo $style_label; ?>">Free Bundle Heading</label>
-    <input type="text" name="service_free_title" value="<?php echo esc_attr( $free_ttl ); ?>" style="<?php echo $style_input; ?>" placeholder="Also Get Absolutely Free">
-
+    <label style="<?php echo $style_label; ?>">Hero Style</label>
+    <select name="service_hero_style" id="oc_service_hero_style" style="<?php echo $style_input; ?>">
+        <option value="hero1" <?php selected( $hero_style, 'hero1' ); ?>>Hero 1 — Price + Free Bundle</option>
+        <option value="hero2" <?php selected( $hero_style, 'hero2' ); ?>>Hero 2 — Title + Description + Checklist</option>
+    </select>
     <hr style="margin:10px 0;">
-    <p style="font-size:11px;color:#8c8f94;margin:0 0 8px;">Free items — icon class (e.g. <code>fa-star</code>) + label text:</p>
-    <?php for ( $i = 1; $i <= 4; $i++ ) :
-        $icon  = get_post_meta( $post->ID, "_service_free_{$i}_icon",  true ) ?: $default_icons[ $i - 1 ];
-        $label = get_post_meta( $post->ID, "_service_free_{$i}_label", true ) ?: $default_labels[ $i - 1 ];
-    ?>
-    <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;">
-        <span style="font-size:11px;color:#646970;min-width:40px;">Item <?php echo $i; ?></span>
-        <input type="text" name="service_free_<?php echo $i; ?>_icon"  value="<?php echo esc_attr( $icon ); ?>"  style="flex:1;" placeholder="fa-star">
-        <input type="text" name="service_free_<?php echo $i; ?>_label" value="<?php echo esc_attr( $label ); ?>" style="flex:1.5;" placeholder="Label">
+
+    <div id="oc_hero1_fields">
+        <label style="<?php echo $style_label; ?>">Price Tag</label>
+        <input type="text" name="service_price" value="<?php echo esc_attr( $price ); ?>" style="<?php echo $style_input; ?>" placeholder="@ Rs. 990 All Inclusive">
+
+        <label style="<?php echo $style_label; ?>">Hero Subtitle</label>
+        <input type="text" name="service_subtitle" value="<?php echo esc_attr( $subtitle ); ?>" style="<?php echo $style_input; ?>" placeholder="100% Online Process & CA Services">
+
+        <label style="<?php echo $style_label; ?>">Free Bundle Heading</label>
+        <input type="text" name="service_free_title" value="<?php echo esc_attr( $free_ttl ); ?>" style="<?php echo $style_input; ?>" placeholder="Also Get Absolutely Free">
+
+        <hr style="margin:10px 0;">
+        <p style="font-size:11px;color:#8c8f94;margin:0 0 8px;">Free items — icon class (e.g. <code>fa-star</code>) + label text:</p>
+        <?php for ( $i = 1; $i <= 4; $i++ ) :
+            $icon  = get_post_meta( $post->ID, "_service_free_{$i}_icon",  true ) ?: $default_icons[ $i - 1 ];
+            $label = get_post_meta( $post->ID, "_service_free_{$i}_label", true ) ?: $default_labels[ $i - 1 ];
+        ?>
+        <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;">
+            <span style="font-size:11px;color:#646970;min-width:40px;">Item <?php echo $i; ?></span>
+            <input type="text" name="service_free_<?php echo $i; ?>_icon"  value="<?php echo esc_attr( $icon ); ?>"  style="flex:1;" placeholder="fa-star">
+            <input type="text" name="service_free_<?php echo $i; ?>_label" value="<?php echo esc_attr( $label ); ?>" style="flex:1.5;" placeholder="Label">
+        </div>
+        <?php endfor; ?>
     </div>
-    <?php endfor; ?>
+
+    <div id="oc_hero2_fields">
+        <label style="<?php echo $style_label; ?>">Hero 2 Description</label>
+        <textarea name="service_hero2_desc" rows="3" style="<?php echo $style_input; ?>" placeholder="Short description shown under the title"><?php echo esc_textarea( $hero2_desc ); ?></textarea>
+
+        <label style="<?php echo $style_label; ?>">Hero 2 Checklist Points</label>
+        <textarea name="service_hero2_points" rows="6" style="<?php echo $style_input; ?>" placeholder="One point per line&#10;e.g. Free Digital Signature&#10;Same Day Filing"><?php echo esc_textarea( $hero2_points ); ?></textarea>
+        <span style="<?php echo $style_hint; ?>">One point per line — each becomes a checklist item with a tick mark.</span>
+    </div>
+
+    <script>
+    ( function () {
+        var sel = document.getElementById( 'oc_service_hero_style' );
+        var h1  = document.getElementById( 'oc_hero1_fields' );
+        var h2  = document.getElementById( 'oc_hero2_fields' );
+        if ( ! sel || ! h1 || ! h2 ) {
+            return;
+        }
+        function toggle() {
+            var isHero2 = sel.value === 'hero2';
+            h1.style.display = isHero2 ? 'none' : 'block';
+            h2.style.display = isHero2 ? 'block' : 'none';
+        }
+        sel.addEventListener( 'change', toggle );
+        toggle();
+    } )();
+    </script>
     <?php
 }
 
@@ -776,6 +818,11 @@ function oc_ca_save_service_meta( $post_id ) {
         return;
     }
 
+    if ( isset( $_POST['service_hero_style'] ) ) {
+        $hero_style = sanitize_text_field( wp_unslash( $_POST['service_hero_style'] ) );
+        update_post_meta( $post_id, '_service_hero_style', in_array( $hero_style, array( 'hero1', 'hero2' ), true ) ? $hero_style : 'hero1' );
+    }
+
     $text_fields = array(
         'service_price'      => '_service_price',
         'service_subtitle'   => '_service_subtitle',
@@ -785,6 +832,13 @@ function oc_ca_save_service_meta( $post_id ) {
         if ( isset( $_POST[ $post_key ] ) ) {
             update_post_meta( $post_id, $meta_key, sanitize_text_field( wp_unslash( $_POST[ $post_key ] ) ) );
         }
+    }
+
+    if ( isset( $_POST['service_hero2_desc'] ) ) {
+        update_post_meta( $post_id, '_service_hero2_desc', sanitize_textarea_field( wp_unslash( $_POST['service_hero2_desc'] ) ) );
+    }
+    if ( isset( $_POST['service_hero2_points'] ) ) {
+        update_post_meta( $post_id, '_service_hero2_points', sanitize_textarea_field( wp_unslash( $_POST['service_hero2_points'] ) ) );
     }
 
     for ( $i = 1; $i <= 4; $i++ ) {
