@@ -4107,13 +4107,13 @@ img {
 .form-zoho-badge {
     display: flex;
     justify-content: center;
-    margin-top: 32px;
-    padding-top: 20px;
+    margin-top: 40px;
+    padding-top: 24px;
     border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .form-zoho-badge img {
-    max-width: 170px;
+    max-width: 130px;
     width: 100%;
     height: auto;
 }
