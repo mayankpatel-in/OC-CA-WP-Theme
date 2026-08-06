@@ -3140,6 +3140,26 @@ img {
     }
 }
 
+/* Service hero — smooth the scale-down before the 576px breakpoint */
+@media (max-width: 768px) {
+    .subpage-hero h1 {
+        font-size: 2.1rem;
+    }
+    .price-tag {
+        font-size: 2.2rem;
+    }
+    .free-items-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+    .hero2-description {
+        font-size: 1rem;
+    }
+    .hero2-points li {
+        font-size: 0.95rem;
+    }
+}
+
 @media (max-width: 576px) {
     .container {
         padding: 0 15px;
@@ -3168,6 +3188,24 @@ img {
     }
     .subpage-hero-form {
         padding: 20px;
+    }
+    .subpage-hero-form h3 {
+        font-size: 1.15rem;
+    }
+    .hero2-description {
+        font-size: 0.95rem;
+    }
+    .hero2-points {
+        margin-top: 20px;
+        gap: 12px;
+    }
+    .hero2-points li {
+        font-size: 0.9rem;
+    }
+    .interactive-form input,
+    .interactive-form select,
+    .interactive-form textarea {
+        font-size: 16px; /* stops iOS Safari from zooming in on focus */
     }
     .banner-text h2 {
         font-size: 1.8rem;
@@ -3198,6 +3236,21 @@ img {
 @media (max-width: 480px) {
     .doc-requirements-grid {
         grid-template-columns: 1fr;
+    }
+    .subpage-hero h1 {
+        font-size: 1.6rem;
+    }
+    .price-tag {
+        font-size: 1.8rem;
+    }
+    .free-items-grid {
+        gap: 10px;
+    }
+    .free-label {
+        font-size: 0.68rem;
+    }
+    .free-title {
+        font-size: 0.8rem;
     }
 }
 
