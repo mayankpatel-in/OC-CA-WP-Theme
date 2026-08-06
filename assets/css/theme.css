@@ -2132,8 +2132,7 @@ img {
 
 /* Medium Tablets/Small Desktops (992px and up) */
 @media (max-width: 992px) {
-    .hero-content-grid,
-    .hero-subpage-grid {
+    .hero-content-grid {
         grid-template-columns: 1fr;
         gap: 40px;
     }
@@ -3123,6 +3122,14 @@ img {
 
 /* Responsive subpages queries */
 @media (max-width: 992px) {
+    /* .hero-subpage-grid's base (2-column) rule is declared further down the
+       file than the earlier collapse rule near the top, so it wins the
+       cascade and silently cancels the 1-column mobile layout. Re-declare
+       it here, after the base rule, so it actually takes effect. */
+    .hero-subpage-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
     .main-grid {
         grid-template-columns: 1fr;
     }
