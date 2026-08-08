@@ -854,3 +854,181 @@ function oc_ca_save_service_meta( $post_id ) {
     }
 }
 add_action( 'save_post_page', 'oc_ca_save_service_meta' );
+
+
+// ============================================================
+// 11. LEAD FORMS — CENTRAL ROUTING + EMAIL DELIVERY
+// ============================================================
+//
+// Every quote/consultation/contact form on the site (home hero, home
+// callback banner, "Get a Quote" popup, service page hero, sidebar
+// consult card, and the Contact Us page) posts to the same AJAX
+// endpoint. Which inbox each one lands in is configured from a single
+// admin page: Settings → Lead Forms.
+
+// Registry of every lead form on the site: key => label shown in admin + emails.
+function oc_ca_lead_form_registry() {
+    return array(
+        'hero_quote'         => 'Home Page — Hero "Book Free Consultation"',
+        'callback'           => 'Home Page — "Request a Callback" Banner',
+        'modal_quote'        => 'Site-wide — "Get a Quote" Popup',
+        'service_hero_quote' => 'Service Pages — Hero "Book Free Consultation"',
+        'sidebar_consult'    => 'Sidebar — "Get Free Consultation"',
+        'contact_page'       => 'Contact Us Page',
+    );
+}
+
+function oc_ca_lead_form_default_email() {
+    return get_theme_mod( 'footer_email', get_bloginfo( 'admin_email' ) );
+}
+
+// ---- AJAX handler: receives the form POST and emails it via wp_mail() ----
+// (Delivery goes through whatever SMTP plugin is active — this only builds
+// the message and calls wp_mail(), it never talks to a mail server directly.)
+function oc_ca_handle_lead_submission() {
+    check_ajax_referer( 'oc_ca_lead_form', 'nonce' );
+
+    $registry = oc_ca_lead_form_registry();
+    $form_key = isset( $_POST['form_key'] ) ? sanitize_key( wp_unslash( $_POST['form_key'] ) ) : '';
+
+    if ( ! isset( $registry[ $form_key ] ) ) {
+        wp_send_json_error( array( 'message' => 'Invalid form.' ) );
+    }
+
+    $name    = isset( $_POST['name'] )    ? sanitize_text_field( wp_unslash( $_POST['name'] ) )       : '';
+    $phone   = isset( $_POST['phone'] )   ? sanitize_text_field( wp_unslash( $_POST['phone'] ) )      : '';
+    $email   = isset( $_POST['email'] )   ? sanitize_email( wp_unslash( $_POST['email'] ) )            : '';
+    $message = isset( $_POST['message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['message'] ) ) : '';
+    $page_url = isset( $_POST['page_url'] ) ? esc_url_raw( wp_unslash( $_POST['page_url'] ) )          : '';
+
+    if ( '' === $name || ( '' === $phone && '' === $email ) ) {
+        wp_send_json_error( array( 'message' => 'Please fill in your name and at least a phone number or email.' ) );
+    }
+
+    $routing = get_option( 'oc_ca_lead_form_routing', array() );
+    $to      = ! empty( $routing[ $form_key ] ) ? $routing[ $form_key ] : oc_ca_lead_form_default_email();
+
+    $subject = 'New Website Lead — ' . $registry[ $form_key ];
+
+    $body   = "You have a new lead from the website.\n\n";
+    $body  .= 'Form: ' . $registry[ $form_key ] . "\n";
+    $body  .= 'Name: ' . $name . "\n";
+    if ( $phone ) {
+        $body .= 'Phone: ' . $phone . "\n";
+    }
+    if ( $email ) {
+        $body .= 'Email: ' . $email . "\n";
+    }
+    if ( $message ) {
+        $body .= "Message:\n" . $message . "\n";
+    }
+    if ( $page_url ) {
+        $body .= 'Submitted from: ' . $page_url . "\n";
+    }
+    $body .= 'Submitted: ' . current_time( 'mysql' ) . "\n";
+
+    $headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+    if ( $email ) {
+        $headers[] = 'Reply-To: ' . $name . ' <' . $email . '>';
+    }
+
+    $sent = wp_mail( $to, $subject, $body, $headers );
+
+    if ( $sent ) {
+        wp_send_json_success( array( 'message' => 'Thank you! Our team will contact you shortly.' ) );
+    } else {
+        wp_send_json_error( array( 'message' => 'Something went wrong sending your request. Please call or WhatsApp us instead.' ) );
+    }
+}
+add_action( 'wp_ajax_oc_ca_submit_lead', 'oc_ca_handle_lead_submission' );
+add_action( 'wp_ajax_nopriv_oc_ca_submit_lead', 'oc_ca_handle_lead_submission' );
+
+// ---- Pass the AJAX URL + nonce to theme.js ----
+function oc_ca_localize_lead_form_script() {
+    wp_localize_script( 'oc-ca-theme-js', 'ocCaLeadForms', array(
+        'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+        'nonce'   => wp_create_nonce( 'oc_ca_lead_form' ),
+    ) );
+}
+add_action( 'wp_enqueue_scripts', 'oc_ca_localize_lead_form_script', 20 );
+
+// ---- Admin page: Settings → Lead Forms ----
+function oc_ca_register_lead_forms_admin_page() {
+    add_options_page(
+        __( 'Lead Forms', 'oc-ca-theme' ),
+        __( 'Lead Forms', 'oc-ca-theme' ),
+        'manage_options',
+        'oc-ca-lead-forms',
+        'oc_ca_render_lead_forms_admin_page'
+    );
+}
+add_action( 'admin_menu', 'oc_ca_register_lead_forms_admin_page' );
+
+function oc_ca_render_lead_forms_admin_page() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+
+    $registry = oc_ca_lead_form_registry();
+    $saved    = false;
+
+    if ( isset( $_POST['oc_ca_lead_forms_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['oc_ca_lead_forms_nonce'] ) ), 'oc_ca_lead_forms_save' ) ) {
+        $routing = array();
+        foreach ( $registry as $key => $label ) {
+            $field = 'lead_email_' . $key;
+            if ( isset( $_POST[ $field ] ) ) {
+                $val = sanitize_text_field( wp_unslash( $_POST[ $field ] ) );
+                if ( '' !== $val ) {
+                    $routing[ $key ] = $val;
+                }
+            }
+        }
+        update_option( 'oc_ca_lead_form_routing', $routing );
+        $saved = true;
+    }
+
+    $routing = get_option( 'oc_ca_lead_form_routing', array() );
+    $default_email = oc_ca_lead_form_default_email();
+    ?>
+    <div class="wrap">
+        <h1><?php esc_html_e( 'Lead Forms', 'oc-ca-theme' ); ?></h1>
+        <p><?php esc_html_e( 'Every enquiry form on the site (home page, service pages, popups, sidebar, and Contact Us) sends here. Choose which inbox each one should email — leave a field blank to fall back to the default address.', 'oc-ca-theme' ); ?></p>
+
+        <?php if ( $saved ) : ?>
+            <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Lead form routing saved.', 'oc-ca-theme' ); ?></p></div>
+        <?php endif; ?>
+
+        <p>
+            <strong><?php esc_html_e( 'Default address (used for any form left blank below):', 'oc-ca-theme' ); ?></strong>
+            <code><?php echo esc_html( $default_email ); ?></code>
+            — <?php esc_html_e( 'set under Appearance → Customize → Footer — Company Info → Email.', 'oc-ca-theme' ); ?>
+        </p>
+
+        <form method="post">
+            <?php wp_nonce_field( 'oc_ca_lead_forms_save', 'oc_ca_lead_forms_nonce' ); ?>
+            <table class="widefat striped" style="max-width:900px;">
+                <thead>
+                    <tr>
+                        <th style="width:45%;"><?php esc_html_e( 'Form', 'oc-ca-theme' ); ?></th>
+                        <th><?php esc_html_e( 'Send leads to (email address)', 'oc-ca-theme' ); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ( $registry as $key => $label ) :
+                        $current = isset( $routing[ $key ] ) ? $routing[ $key ] : '';
+                    ?>
+                    <tr>
+                        <td><?php echo esc_html( $label ); ?></td>
+                        <td>
+                            <input type="text" name="lead_email_<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $current ); ?>" class="regular-text" placeholder="<?php echo esc_attr( $default_email ); ?>">
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <p class="description"><?php esc_html_e( 'Multiple recipients: separate addresses with a comma.', 'oc-ca-theme' ); ?></p>
+            <?php submit_button( __( 'Save Routing', 'oc-ca-theme' ) ); ?>
+        </form>
+    </div>
+    <?php
+}

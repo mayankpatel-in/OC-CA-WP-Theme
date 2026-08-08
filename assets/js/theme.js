@@ -500,37 +500,89 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       8. FORM SUBMISSION (CLIENT-SIDE DEMO ANIMATION)
+       8. FORM SUBMISSION — posts each lead to WordPress (admin-ajax.php),
+          which emails it based on the routing set in Settings → Lead Forms.
+          Visual behaviour (fade out form, fade in success message) is
+          unchanged; only fires once the email has actually been sent.
        ========================================================================== */
-    const setupFormSubmission = (formId, successId) => {
+    const setupFormSubmission = (formId, successId, formKey) => {
         const form = document.getElementById(formId);
         const successMsg = document.getElementById(successId);
 
-        if (form && successMsg) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-
-                form.style.transition = 'opacity 0.3s ease';
-                form.style.opacity = '0';
-
-                setTimeout(() => {
-                    form.style.display = 'none';
-                    successMsg.style.display = 'block';
-                    successMsg.style.opacity = '0';
-                    successMsg.style.transition = 'opacity 0.3s ease';
-                    successMsg.offsetHeight; // Force reflow
-                    successMsg.style.opacity = '1';
-                }, 300);
-            });
+        if (!form || !successMsg || typeof ocCaLeadForms === 'undefined') {
+            return;
         }
+
+        let errorMsg = form.querySelector('.form-error-msg');
+        if (!errorMsg) {
+            errorMsg = document.createElement('p');
+            errorMsg.className = 'form-error-msg';
+            errorMsg.style.cssText = 'display:none;color:#dc2626;font-size:0.85rem;margin-top:10px;text-align:center;';
+            form.appendChild(errorMsg);
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            errorMsg.style.display = 'none';
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Sending...';
+            }
+
+            const data = new FormData(form);
+            data.append('action', 'oc_ca_submit_lead');
+            data.append('form_key', formKey);
+            data.append('nonce', ocCaLeadForms.nonce);
+            data.append('page_url', window.location.href);
+
+            fetch(ocCaLeadForms.ajaxUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                body: data,
+            })
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res && res.success) {
+                        form.style.transition = 'opacity 0.3s ease';
+                        form.style.opacity = '0';
+
+                        setTimeout(() => {
+                            form.style.display = 'none';
+                            successMsg.style.display = 'block';
+                            successMsg.style.opacity = '0';
+                            successMsg.style.transition = 'opacity 0.3s ease';
+                            successMsg.offsetHeight; // Force reflow
+                            successMsg.style.opacity = '1';
+                        }, 300);
+                    } else {
+                        errorMsg.textContent = (res && res.data && res.data.message) || 'Something went wrong. Please try again.';
+                        errorMsg.style.display = 'block';
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnHtml;
+                        }
+                    }
+                })
+                .catch(() => {
+                    errorMsg.textContent = 'Network error — please check your connection and try again.';
+                    errorMsg.style.display = 'block';
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHtml;
+                    }
+                });
+        });
     };
 
-    setupFormSubmission('heroQuoteForm', 'heroFormSuccess');
-    setupFormSubmission('callbackForm', 'cbSuccess');
-    setupFormSubmission('modalQuoteForm', 'modalSuccess');
-    setupFormSubmission('subpageHeroQuoteForm', 'subpageHeroSuccess');
-    setupFormSubmission('sidebarConsultForm', 'sidebarConsultSuccess');
-    setupFormSubmission('contactPageForm', 'contactPageSuccess');
+    setupFormSubmission('heroQuoteForm', 'heroFormSuccess', 'hero_quote');
+    setupFormSubmission('callbackForm', 'cbSuccess', 'callback');
+    setupFormSubmission('modalQuoteForm', 'modalSuccess', 'modal_quote');
+    setupFormSubmission('serviceHeroQuoteForm', 'serviceHeroSuccess', 'service_hero_quote');
+    setupFormSubmission('sidebarConsultForm', 'sidebarConsultSuccess', 'sidebar_consult');
+    setupFormSubmission('contactPageForm', 'contactPageSuccess', 'contact_page');
 
     /* ==========================================================================
        9. TEAM SECTION — TAB SWITCHING
